@@ -92,7 +92,10 @@ class VoiceTest extends Component {
       end: '',
     });
     try {
-      await Voice.start('en-US');
+      await Voice.start('es_US', {
+        "RECOGNIZER_ENGINE": "GOOGLE",
+         "EXTRA_PARTIAL_RESULTS": true
+      });
       console.log("bum recognizing")
     } catch (e) {
       console.error(e);
@@ -118,9 +121,6 @@ class VoiceTest extends Component {
   render() {
     return (
       <View style={styles.container}>
-      <View>
-        <Text style={styles.map}>Map </Text>
-      </View>
 
       {/* shows results from state */}
         <Text style={styles.result}>Results</Text>

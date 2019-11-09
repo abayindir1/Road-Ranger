@@ -9,13 +9,20 @@ import {
 } from 'react-native';
 import VoiceTest from './src/VoiceToText'
 import TextTest from './src/TextToVoice'
+import Map from "./src/Maps"
 
 const App: () => React$Node = () => {
+
+
+
+
+
   return (
     <>
       
       <SafeAreaView>
         <ScrollView>
+          <Map/>
          <VoiceTest/>
          <TextTest/>
         </ScrollView>

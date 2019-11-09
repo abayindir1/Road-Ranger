@@ -10,8 +10,11 @@
     "install": "jetify"
   },
   "dependencies": {
+    "axios": "^0.19.0",
+    "haversine": "^1.1.1",
     "react": "16.8.1",
     "react-native": "0.61.3",
+    "react-native-maps": "0.26.1",
     "react-native-tts": "^3.0.0",
     "react-native-voice": "^0.3.0"
   },
