@@ -86,7 +86,7 @@ class Map extends React.Component {
     api
       .getAllMarkers()
       .then(results => {
-        console.log(results);
+        // console.log(results);
         this.setState({
           markers: results.data,
         });
