@@ -33,7 +33,7 @@ import {Marker} from 'react-native-maps';
 
 import haversine from 'haversine';
 
-import api from '../utils/api';
+import api from '../../utils/api';
 
 // import Voice from 'react-native-voice';
 
@@ -306,7 +306,7 @@ class Map extends React.Component {
             this.onUserLocationChange(result.nativeEvent.coordinate)
           }
           //maps out markers with nested images. Markers can be assigned images by classification
-          style={{width: '100%', height: 400}}>
+          style={{width: '100%', height: "100%"}}>
           {mapMarkers}
         </MapView>
 
