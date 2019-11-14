@@ -1,25 +1,144 @@
 import React, { Component } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
+import Voice from 'react-native-voice';
+import { PermissionsAndroid } from 'react-native';
 import Map from "../components/Map";
 import NavBar from "../components/NavBar";
 import LogoHeader from "../components/LogoHeader";
 import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import IoniconsIcon from "react-native-vector-icons/Ionicons";
+import VoiceTest from '../components/VoiceToText'
 import Maps from "../components/Maps"
 // import MaterialMapView from "../components/MaterialMapView";
 import TalkButton from "../components/TalkButton";
 
-const Home = (props) => {
-  return (
-    <View style={styles.container}>
-      <Maps style={styles.mainMap} />
-      <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("SignUp")} onLongPress={() => props.navigation.navigate("Login")}>
-        <TalkButton style={styles.talkButton} />
-      </TouchableOpacity>
+class Home extends Component {
+  state = {
+    recognized: '',
+    pitch: '',
+    error: '',
+    end: '',
+    started: '',
+    results: [],
+    partialResults: [],
+    hasSpeechRecorded: false,
+  };
+  constructor(props) {
+    super(props);
+    Voice.onSpeechStart = this.onSpeechStart;
+    Voice.onSpeechRecognized = this.onSpeechRecognized;
+    Voice.onSpeechEnd = this.onSpeechEnd;
+    Voice.onSpeechError = this.onSpeechError;
+    Voice.onSpeechResults = this.onSpeechResults;
+    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
+    this.requestAudioPermission()
+  }
+  async requestAudioPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        {
+          title: 'Voice to text need RecordPermission',
+          message:
+            'Voice to text needs access to your microphone',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the microphone');
+      } else {
+        console.log('Camera permission microphone');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
 
-    </View>
+  componentWillUnmount() {
+    Voice.destroy().then(Voice.removeAllListeners);
+  }
+  onSpeechStart = e => {
+    console.log('SPEAK NOW');
+    this.setState({
+      started: 'bum',
+    });
+  };
+  onSpeechRecognized = e => {
+    console.log('On speech recognized');
+    this.setState({
+      recognized: 'bum',
+    });
+  };
+  onSpeechError = e => {
+    console.log('onSpeechError: ', e, 'speak again please');
+    this.setState({
+      error: JSON.stringify(e.error),
+    });
+  };
+  onSpeechResults = e => {
+    console.log('onSpeechResults: ', e, 'Speech recognition has finished');
+    this.setState({
+      results: e.value,
+      hasSpeechRecorded: true,
+    });
+  };
+  onSpeechPartialResults = e => {
+    console.log('Show them that you are listening', 'onSpeechPartialResults: ', e);
+    this.setState({
+      partialResults: e.value,
+    });
+  };
+  _startRecognizing = async () => {
+    this.setState({
+      // recognized: 'anything',
+      pitch: '',
+      error: '',
+      started: '',
+      results: [],
+      partialResults: [],
+      end: '',
+    });
+    try {
+      await Voice.start('en_US', {
+        "RECOGNIZER_ENGINE": "GOOGLE",
+        "EXTRA_PARTIAL_RESULTS": true
+      });
+      console.log('The speech recognizing function us running')
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  _destroyRecognizer = async () => {
+    try {
+      await Voice.destroy();
+    } catch (e) {
+      console.error(e);
+    }
+    this.setState({
+      recognized: '',
+      pitch: '',
+      error: '',
+      started: '',
+      results: [],
+      partialResults: [],
+      end: '',
+    });
+  };
+  toggleHasSpeechRecorded = (hasSpeechRecorded) => this.setState({ hasSpeechRecorded })
+  render() {
+    return (
+      <View style={styles.container}>
+        <Maps toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
+        <TouchableOpacity style={styles.button} onPress={() => console.log('yo')} onLongPress={this._startRecognizing}>
+          <TalkButton style={styles.talkButton} />
+        </TouchableOpacity>
+      </View>
+    )
 
-  );
+  }
 }
 
 const styles = StyleSheet.create({
