@@ -9,81 +9,96 @@ import {
   StatusBar
 } from "react-native";
 import EvilIconsIcon from "react-native-vector-icons/EvilIcons";
+import api from '../../utils/api';
 
-function Login() {
-  return (
-    <View style={styles.root}>
-      <View style={styles.Background}>
-        <ImageBackground
-          style={styles.rect}
-          imageStyle={styles.rect_imageStyle}
-          source={require("../assets/images/Gradient_LZGIVfZ.png")}
-        >
-          <View style={styles.LogoColumn}>
-            <View style={styles.Logo}>
-              <View style={styles.stackFiller} />
-              <View style={styles.rect7Stack}>
-                <View style={styles.rect7} />
-                <TextInput
-                  placeholder="RЯ"
-                  placeholderTextColor="rgba(255,255,255,1)"
-                  underlineColorAndroid="rgba(240,11,11,1)"
-                  style={styles.textInput}
-                />
-              </View>
-            </View>
-            <View style={styles.Form}>
-              <View style={styles.UsernameColumn}>
-                <View style={styles.Username}>
-                  <EvilIconsIcon name="user" style={styles.icon2} />
+class Login extends Component {
+
+state = {
+  username: '',
+  password: ''
+}
+
+  render() {
+
+    return (
+
+      <View style={styles.root}>
+        <View style={styles.Background}>
+          <ImageBackground
+            style={styles.rect}
+            imageStyle={styles.rect_imageStyle}
+            source={require("../assets/images/Gradient_LZGIVfZ.png")}
+          >
+            <View style={styles.LogoColumn}>
+              <View style={styles.Logo}>
+                <View style={styles.stackFiller} />
+                <View style={styles.rect7Stack}>
+                  <View style={styles.rect7} />
                   <TextInput
-                    placeholder="Username"
+                    placeholder="RЯ"
                     placeholderTextColor="rgba(255,255,255,1)"
-                    secureTextEntry={false}
+                    underlineColorAndroid="rgba(240,11,11,1)"
+                    style={styles.textInput}
+                  />
+                </View>
+              </View>
+              <View style={styles.Form}>
+                <View style={styles.UsernameColumn}>
+                  <View style={styles.Username}>
+                    <EvilIconsIcon name="user" style={styles.icon2} />
+                    <TextInput
+                      placeholder="Username"
+                      placeholderTextColor="rgba(255,255,255,1)"
+                      secureTextEntry={false}
                     // style={styles.UsernameInput}
-                  />
-                </View>
-                <View style={styles.Password}>
-                  <EvilIconsIcon name="lock" style={styles.icon2} />
-                  <TextInput
-                    placeholder="Password"
-                    placeholderTextColor="rgba(255,255,255,1)"
-                    secureTextEntry={false}
+                    />
+                  </View>
+                  <View style={styles.Password}>
+                    <EvilIconsIcon name="lock" style={styles.icon2} />
+                    <TextInput
+                      placeholder="Password"
+                      placeholderTextColor="rgba(255,255,255,1)"
+                      secureTextEntry={false}
                     // style={styles.PasswordInput}
-                  />
+                    />
+                  </View>
                 </View>
+                <View style={styles.UsernameColumnFiller} />
+                <TouchableOpacity
+                  onPress={() => props.navigation.navigate("Channels")}
+                  style={styles.button}
+                >
+                  <Text style={styles.text2}>Get Started</Text>
+                </TouchableOpacity>
               </View>
-              <View style={styles.UsernameColumnFiller} />
-              <TouchableOpacity
-                onPress={() => props.navigation.navigate("Channels")}
-                style={styles.button}
-              >
-                <Text style={styles.text2}>Get Started</Text>
-              </TouchableOpacity>
             </View>
-          </View>
-          <View style={styles.LogoColumnFiller} />
-          <View style={styles.FooterTexts}>
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate("SignUp")}
-              style={styles.button2}
-            >
-              <View style={styles.CreateAccountFiller} />
-              <Text style={styles.CreateAccount}>Create Account</Text>
-            </TouchableOpacity>
-            <View style={styles.button2Filler} />
-            <Text style={styles.NeedHelp}>Need Help?</Text>
-          </View>
-        </ImageBackground>
+            <View style={styles.LogoColumnFiller} />
+            <View style={styles.FooterTexts}>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate("SignUp")}
+                style={styles.button2}
+              >
+                <View style={styles.CreateAccountFiller} />
+                <Text style={styles.CreateAccount}>Create Account</Text>
+              </TouchableOpacity>
+              <View style={styles.button2Filler} />
+              <Text style={styles.NeedHelp}>Need Help?</Text>
+            </View>
+          </ImageBackground>
+        </View>
+        <StatusBar
+          animated={false}
+          barStyle="light-content"
+          hidden={false}
+          backgroundColor="rgba(0,0,0,0)"
+        />
       </View>
-      <StatusBar
-        animated={false}
-        barStyle="light-content"
-        hidden={false}
-        backgroundColor="rgba(0,0,0,0)"
-      />
-    </View>
-  );
+    );
+
+  }
+
+
+
 }
 
 const styles = StyleSheet.create({

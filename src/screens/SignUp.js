@@ -5,82 +5,109 @@ import {
   ImageBackground,
   Text,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  KeyboardAvoidingView
 } from "react-native";
 import IoniconsIcon from "react-native-vector-icons/Ionicons";
 import EntypoIcon from "react-native-vector-icons/Entypo";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import EvilIconsIcon from "react-native-vector-icons/EvilIcons";
+import api from '../../utils/api';
 
-function SignUp() {
-  return (
-    <View style={styles.root}>
-      <View style={styles.BackgroundFiller} />
-      <View style={styles.Background}>
-        <ImageBackground
-          style={styles.rect2}
-          imageStyle={styles.rect2_imageStyle}
-          source={require("../assets/images/Gradient_LZGIVfZ.png")}
-        >
-          <View style={styles.ProgressBarColumn}>
-            <View style={styles.ProgressBar}>
-              <View style={styles.icon2Row}>
-                <IoniconsIcon name="md-checkmark-circle" style={styles.icon2} />
-                <View style={styles.rect4} />
-                <EntypoIcon name="time-slot" style={styles.icon3} />
-                <View style={styles.rect5} />
+class SignUp extends Component {
+
+  state = {
+    username: "Noobslay3r",
+    email: "nhaer123@gmail.com",
+    password: "password123456",
+  }
+
+  componentDidMount () {
+    console.log("gotem")
+    // api.userSignup(this.state)
+    // .then(res => console.log(res))
+    // .catch(err => console.error(err))
+
+
+  }
+
+  render() {
+
+    return (
+      <KeyboardAvoidingView style={styles.root} enabled>
+        <View style={styles.BackgroundFiller} />
+        <View style={styles.Background}>
+          <ImageBackground
+            style={styles.rect2}
+            imageStyle={styles.rect2_imageStyle}
+            source={require("../assets/images/Gradient_LZGIVfZ.png")}
+          >
+            <View style={styles.ProgressBarColumn}>
+              <View style={styles.ProgressBar}>
+                <View style={styles.icon2Row}>
+                  <IoniconsIcon name="md-checkmark-circle" style={styles.icon2} />
+                  <View style={styles.rect4} />
+                  <EntypoIcon name="time-slot" style={styles.icon3} />
+                  <View style={styles.rect5} />
+                </View>
+                <View style={styles.icon2RowFiller} />
+                <FontAwesomeIcon name="circle" style={styles.icon4} />
               </View>
-              <View style={styles.icon2RowFiller} />
-              <FontAwesomeIcon name="circle" style={styles.icon4} />
+              <Text style={styles.text3}>CREATE ACCOUNT</Text>
             </View>
-            <Text style={styles.text3}>CREATE ACCOUNT</Text>
-          </View>
-          <View style={styles.ProgressBarColumnFiller} />
-          <View style={styles.FormColumn}>
-            <View style={styles.Form}>
-              <View style={styles.NameColumn}>
-                <View style={styles.Name}>
-                  <EvilIconsIcon name="user" style={styles.icon5} />
-                  <TextInput
-                    placeholder="Name"
-                    placeholderTextColor="rgba(255,255,255,1)"
-                    secureTextEntry={false}
+            <View style={styles.ProgressBarColumnFiller} />
+            <View style={styles.FormColumn}>
+              <View style={styles.Form}>
+                <View style={styles.NameColumn}>
+                  <View style={styles.Name}>
+                    <EvilIconsIcon name="user" style={styles.icon5} />
+                    <TextInput
+                      placeholder="Username"
+                      placeholderTextColor="rgba(255,255,255,1)"
+                      secureTextEntry={false}
+                      value = {this.state.username}
                     // style={styles.NameInput}
-                  />
-                </View>
-                <View style={styles.Email}>
-                  <EvilIconsIcon name="envelope" style={styles.icon6} />
-                  <TextInput
-                    placeholder="Email"
-                    placeholderTextColor="rgba(255,255,255,1)"
-                    secureTextEntry={false}
+                    />
+                  </View>
+                  <View style={styles.Email}>
+                    <EvilIconsIcon name="envelope" style={styles.icon6} />
+                    <TextInput
+                      placeholder="Email"
+                      placeholderTextColor="rgba(255,255,255,1)"
+                      secureTextEntry={false}
+                      value = {this.state.email}
                     // style={styles.EmailInput}
+                    />
+                  </View>
+                </View>
+                <View style={styles.NameColumnFiller} />
+                <View style={styles.Password}>
+                  <EvilIconsIcon name="lock" style={styles.icon7} />
+                  <TextInput
+                    placeholder="Password"
+                    placeholderTextColor="rgba(255,255,255,1)"
+                    secureTextEntry={true}
+                    value = {this.state.password}
+                  // style={styles.PasswordInput}
                   />
                 </View>
               </View>
-              <View style={styles.NameColumnFiller} />
-              <View style={styles.Password}>
-                <EvilIconsIcon name="lock" style={styles.icon7} />
-                <TextInput
-                  placeholder="Password"
-                  placeholderTextColor="rgba(255,255,255,1)"
-                  secureTextEntry={true}
-                  // style={styles.PasswordInput}
-                />
-              </View>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate("Timeline")}
+                style={styles.Continue}
+              >
+                <Text style={styles.text2}>Continue</Text>
+              </TouchableOpacity>
+              <Text style={styles.text4}>Terms &amp; Conditions</Text>
             </View>
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate("Timeline")}
-              style={styles.Continue}
-            >
-              <Text style={styles.text2}>Continue</Text>
-            </TouchableOpacity>
-            <Text style={styles.text4}>Terms &amp; Conditions</Text>
-          </View>
-        </ImageBackground>
-      </View>
-    </View>
-  );
+          </ImageBackground>
+        </View>
+      </KeyboardAvoidingView>
+    );
+
+  }
+
+
 }
 
 const styles = StyleSheet.create({
