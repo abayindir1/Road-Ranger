@@ -11,7 +11,7 @@ class TextTest extends Component {
         selectedVoice: null,
         speechRate: 0.5,
         speechPitch: 1,
-        text: "This is an example text"
+        text: "example text"
       };
     
       constructor(props) {
@@ -64,12 +64,22 @@ class TextTest extends Component {
         if (voices && voices.length > 0) {
           selectedVoice = voices[0].id;
           try {
-            await Tts.setDefaultLanguage(voices[0].language);
+            await Tts.setDefaultLanguage(voices[3].language);
           } catch (err) {
             // My Samsung S9 has always this error: "Language is not supported"
             console.log(`setDefaultLanguage error `, err);
           }
-          await Tts.setDefaultVoice(voices[0].id);
+
+
+          // for (let voice of voices) {
+          //   if(voice.name === "en-us-x-sfg-local"){
+
+          //     console.log("---------------",voice)
+          //     console.log(voices.indexOf(voice))
+          //   }
+          // }
+
+          await Tts.setDefaultVoice(voices[103].id);
           this.setState({
             voices: availableVoices,
             selectedVoice,
@@ -118,57 +128,24 @@ class TextTest extends Component {
     
       render() {
         return (
-          <View style={styles.container}>
-            <Text style={styles.title}>{`React Native TTS Example`}</Text>
-    
+          <View style={styles.container}>    
             <Button title={`Read text`} onPress={this.readText} />
-    
-            <Text style={styles.label}>{`Status: ${this.state.ttsStatus ||
+            {/* <Text style={styles.label}>{`Status: ${this.state.ttsStatus ||
               ""}`}</Text>
-    
             <Text style={styles.label}>{`Selected Voice: ${this.state
-              .selectedVoice || ""}`}</Text>
-    
-            <View style={styles.sliderContainer}>
-              <Text
-                style={styles.sliderLabel}
-              >{`Speed: ${this.state.speechRate.toFixed(2)}`}</Text>
-              <Slider
-                style={styles.slider}
-                minimumValue={0.01}
-                maximumValue={0.99}
-                value={this.state.speechRate}
-                onSlidingComplete={this.setSpeechRate}
-              />
-            </View>
-    
-            <View style={styles.sliderContainer}>
-              <Text
-                style={styles.sliderLabel}
-              >{`Pitch: ${this.state.speechPitch.toFixed(2)}`}</Text>
-              <Slider
-                style={styles.slider}
-                minimumValue={0.5}
-                maximumValue={2}
-                value={this.state.speechPitch}
-                onSlidingComplete={this.setSpeechPitch}
-              />
-            </View>
-    
+              .selectedVoice || ""}`}</Text> */}
+              
+{/*     
+            
             <TextInput
               style={styles.textInput}
               multiline={true}
               onChangeText={text => this.setState({ text })}
               value={this.state.text}
               onSubmitEditing={Keyboard.dismiss}
-            />
+            /> */}
     
-            <FlatList
-              keyExtractor={item => item.id}
-              renderItem={this.renderVoiceItem}
-              extraData={this.state.selectedVoice}
-              data={this.state.voices}
-            />
+           
           </View>
         );
       }

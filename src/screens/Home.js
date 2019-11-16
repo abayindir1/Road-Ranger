@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View,Alert, TouchableOpacity } from "react-native";
 import Voice from 'react-native-voice';
+
 import { PermissionsAndroid } from 'react-native';
 import Map from "../components/Map";
 import NavBar from "../components/NavBar";
@@ -9,6 +10,7 @@ import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommun
 import IoniconsIcon from "react-native-vector-icons/Ionicons";
 import VoiceTest from '../components/VoiceToText'
 import Maps from "../components/Maps"
+import TextTest from '../components/TextToVoice'
 // import MaterialMapView from "../components/MaterialMapView";
 import TalkButton from "../components/TalkButton";
 import api from '../../utils/api';
@@ -30,7 +32,15 @@ class Home extends Component {
     results: [],
     partialResults: [],
     hasSpeechRecorded: false,
+    // ---------------------------------
+    // voices: [],
+    //     ttsStatus: "initiliazing",
+    //     selectedVoice: null,
+    //     speechRate: 0.5,
+    //     speechPitch: 1,
+    //     text: "hey apo how are you",
   };
+  
   constructor(props) {
     super(props);
     Voice.onSpeechStart = this.onSpeechStart;
@@ -41,7 +51,21 @@ class Home extends Component {
     Voice.onSpeechPartialResults = this.onSpeechPartialResults;
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
     this.requestAudioPermission()
+    // ---------------------------------------------------------
+    // Tts.addEventListener("tts-start", event =>
+    //       this.setState({ ttsStatus: "started" })
+    //     );
+    //     Tts.addEventListener("tts-finish", event =>
+    //       this.setState({ ttsStatus: "finished" })
+    //     );
+    //     Tts.addEventListener("tts-cancel", event =>
+    //       this.setState({ ttsStatus: "cancelled" })
+    //     );
+    //     Tts.setDefaultRate(this.state.speechRate);
+    //     Tts.setDefaultPitch(this.state.speechPitch);
+    //     Tts.getInitStatus().then(this.initTts);
   }
+
   async requestAudioPermission() {
     try {
       const granted = await PermissionsAndroid.request(
@@ -82,12 +106,18 @@ class Home extends Component {
   };
   onSpeechError = e => {
     console.log('onSpeechError: ', e, 'speak again please');
+    Alert.alert(
+      "Please speak again."
+    )
     this.setState({
       error: JSON.stringify(e.error),
     });
   };
   onSpeechResults = e => {
     console.log('onSpeechResults: ', e, 'Speech recognition has finished');
+    Alert.alert(
+      "Speech recognition has finished."
+    )
     this.setState({
       results: e.value,
       hasSpeechRecorded: true,
@@ -136,14 +166,15 @@ class Home extends Component {
     });
   };
   toggleHasSpeechRecorded = (hasSpeechRecorded) => this.setState({ hasSpeechRecorded })
+
+ 
+
+
   render() {
     return (
       <View style={styles.container}>
         <Maps toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
         <TouchableOpacity style={styles.button} onPress={() => console.log('yo')} onLongPress={this._startRecognizing}>
-          <TalkButton style={styles.talkButton} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.testButton} onPress={() => this.props.navigation.navigate("Login")} onLongPress={() => this.props.navigation.navigate("SignUp")}>
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
       </View>

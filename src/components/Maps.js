@@ -28,6 +28,9 @@ import haversine from 'haversine';
 
 import api from '../../utils/api';
 
+
+import Tts from 'react-native-tts';
+
 // import Voice from 'react-native-voice';
 
 class Map extends React.Component {
@@ -47,9 +50,30 @@ class Map extends React.Component {
     end: '',
     results: [],
     partialResults: [],
+
+    voices: [],
+        ttsStatus: "initiliazing",
+        selectedVoice: null,
+        speechRate: 0.5,
+        speechPitch: 1,
+        text: "hey apo how are you",
   };
 
-
+  constructor(props) {
+    super(props);
+Tts.addEventListener("tts-start", event =>
+          this.setState({ ttsStatus: "started" })
+        );
+        Tts.addEventListener("tts-finish", event =>
+          this.setState({ ttsStatus: "finished" })
+        );
+        Tts.addEventListener("tts-cancel", event =>
+          this.setState({ ttsStatus: "cancelled" })
+        );
+        Tts.setDefaultRate(this.state.speechRate);
+        Tts.setDefaultPitch(this.state.speechPitch);
+        Tts.getInitStatus().then(this.initTts);
+  }
 
   componentDidMount() {
     console.log('Boogaloo');
@@ -65,13 +89,19 @@ class Map extends React.Component {
       title: 'vista',
       classification: 'chance',
     };
-
+    console.log('about to make call')
     api
       .getAllMarkers()
       .then(results => {
+        console.log('inside call')
+        console.log(results);
+        for (let marker of results.data) {
+          marker.mentioned = false;
+        }
         this.setState({
           markers: results.data,
         });
+        console.log(this.state.markers)
       })
       .catch(err => console.log(err));
 
@@ -80,6 +110,7 @@ class Map extends React.Component {
     //   .then(newMarker => console.log(newMarker))
     //   .catch(err => console.log(err));
   }
+   
 
   //requesting location perimission
   async requestFineLocationPermission() {
@@ -115,26 +146,116 @@ class Map extends React.Component {
       console.log('Make call to send coordinates');
       console.log('in the .then, this.setState({ markers: this.state.markers.concat({ your marker object }) })')
       console.log({ markers: this.state.markers, coordinates, speechRecognitionResults: this.props.speechRecognitionResults[0]})
+      api.makeMarker({
+        latitude,
+        longitude,
+        title: this.props.speechRecognitionResults[0]
+      })
+
       this.props.toggleHasSpeechRecorded(false);
     }
 
     const closeEnoughArr = [];
     if (this.state.markers.length > 0) {
       for (let marker of this.state.markers) {
-        closeEnoughArr.push(
-          haversine(
+       const closeEnough = haversine(
             {latitude, longitude},
             {latitude: marker.latitude, longitude: marker.longitude},
             {
-              threshold: 1,
+              threshold: 0.25,
               unit: 'mile',
             },
-          ),
-        );
-      }
+          )
+
+        if(closeEnough && marker.mentioned === false) {
+          this.readText(marker.title)
+          console.log(marker.title)
+          marker.mentioned = true
+        }
+        
+    }
     }
     // console.log(closeEnoughArr)
   }
+
+
+
+
+
+
+   // -----------------------------------textToVoice-------------------------
+   initTts = async () => {
+    const voices = await Tts.voices();
+    const availableVoices = voices
+      .filter(v => !v.networkConnectionRequired && !v.notInstalled)
+      .map(v => {
+        return { id: v.id, name: v.name, language: v.language };
+      });
+    let selectedVoice = null;
+    if (voices && voices.length > 0) {
+      selectedVoice = voices[0].id;
+      try {
+        await Tts.setDefaultLanguage(voices[3].language);
+      } catch (err) {
+        // My Samsung S9 has always this error: "Language is not supported"
+        console.log(`setDefaultLanguage error `, err);
+      }
+
+
+      // for (let voice of voices) {
+      //   if(voice.name === "en-us-x-sfg-local"){
+
+      //     console.log("---------------",voice)
+      //     console.log(voices.indexOf(voice))
+      //   }
+      // }
+      console.log(voices[103])
+      await Tts.setDefaultVoice(voices[103].id);
+      this.setState({
+        voices: availableVoices,
+        selectedVoice,
+        ttsStatus: "initialized"
+      });
+    } else {
+      this.setState({ ttsStatus: "initialized" });
+    }
+  };
+
+  readText = async (title) => {
+    Tts.stop();
+    Tts.speak(title);
+  };
+
+  setSpeechRate = async rate => {
+    await Tts.setDefaultRate(rate);
+    this.setState({ speechRate: rate });
+  };
+
+  setSpeechPitch = async rate => {
+    await Tts.setDefaultPitch(rate);
+    this.setState({ speechPitch: rate });
+  };
+
+  onVoicePress = async voice => {
+    try {
+      await Tts.setDefaultLanguage(voice.language);
+    } catch (err) {
+      // My Samsung S9 has always this error: "Language is not supported"
+      console.log(`setDefaultLanguage error `, err);
+    }
+    await Tts.setDefaultVoice(voice.id);
+    this.setState({ selectedVoice: voice.id });
+  };
+
+  renderVoiceItem = ({ item }) => {
+    return (
+      <Button
+        title={`${item.language} - ${item.name || item.id}`}
+        color={this.state.selectedVoice === item.id ? undefined : "#969696"}
+        onPress={() => this.onVoicePress(item)}
+      />
+    );
+  };
 
   render() {
 
@@ -147,8 +268,8 @@ class Map extends React.Component {
           coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
           title={marker.title}
           description={marker.description}
-          key = {marker._id}
-          // onPress
+          onPress={this.readText}
+
         >
           {/* <Image
             source={'./assets/pothole.jpg'}
@@ -157,6 +278,7 @@ class Map extends React.Component {
         </Marker>
       ));
     } else {
+
     }
 
     return (
