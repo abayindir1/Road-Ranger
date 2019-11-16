@@ -27,8 +27,9 @@ componentDidMount() {
     console.log(token.data)
     this.setState({token: token.data})
     this.storeData()
-    console.log("muppet boogaloo")
+    // console.log("muppet boogaloo")
     this.retrieveData()
+    // this.props.navigation.navigate("Home")
   })
 }
 
