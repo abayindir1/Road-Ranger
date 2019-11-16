@@ -13,8 +13,16 @@ import Maps from "../components/Maps"
 import TextTest from '../components/TextToVoice'
 // import MaterialMapView from "../components/MaterialMapView";
 import TalkButton from "../components/TalkButton";
+import api from '../../utils/api';
 
 class Home extends Component {
+
+
+  static navigationOptions = {
+    title: 'Home',
+  };
+
+
   state = {
     recognized: '',
     pitch: '',
@@ -169,7 +177,6 @@ class Home extends Component {
         <TouchableOpacity style={styles.button} onPress={() => console.log('yo')} onLongPress={this._startRecognizing}>
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
-        
       </View>
     )
 
@@ -307,6 +314,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: 'absolute',
     bottom: "2%"
+  },
+  testButton: {
+    alignSelf: "center",
+    position: 'absolute',
+    bottom: "20%"
   },
   talkButton: {
     width: 136,

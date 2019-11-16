@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   SafeAreaView,
@@ -136,13 +137,11 @@ Tts.addEventListener("tts-start", event =>
     }
   }
 
- 
-
   onUserLocationChange(coordinates) {
     // console.log(coordinates);
     const {latitude, longitude} = coordinates;
 
-    // console.log(latitude, longitude)
+
     if (this.props.hasSpeechRecorded) {
       console.log('Make call to send coordinates');
       console.log('in the .then, this.setState({ markers: this.state.markers.concat({ your marker object }) })')
@@ -270,6 +269,7 @@ Tts.addEventListener("tts-start", event =>
           title={marker.title}
           description={marker.description}
           onPress={this.readText}
+
         >
           {/* <Image
             source={'./assets/pothole.jpg'}
@@ -290,14 +290,12 @@ Tts.addEventListener("tts-start", event =>
             ...this.state.currentPosition,
           }}
           onUserLocationChange={result =>
-            this.onUserLocationChange(result.nativeEvent.coordinate)//-----
+            this.onUserLocationChange(result.nativeEvent.coordinate)
           }
           //maps out markers with nested images. Markers can be assigned images by classification
           style={{width: '100%', height: "100%"}}>
           {mapMarkers}
         </MapView>
-
-       
       </>
     );
   }
