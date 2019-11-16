@@ -114,7 +114,13 @@ class Map extends React.Component {
     if (this.props.hasSpeechRecorded) {
       console.log('Make call to send coordinates');
       console.log('in the .then, this.setState({ markers: this.state.markers.concat({ your marker object }) })')
-      console.log({ markers: this.state.markers, coordinates, speechRecognitionResults: this.props.speechRecognitionResults[0]})
+      // console.log({ markers: this.state.markers, coordinates, speechRecognitionResults: this.props.speechRecognitionResults[0]})
+
+      api.makeMarker({
+        latitude,
+        longitude,
+        title: this.props.speechRecognitionResults[0]
+      })
       this.props.toggleHasSpeechRecorded(false);
     }
 

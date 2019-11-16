@@ -10,6 +10,7 @@
     "install": "jetify"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.6.3",
     "axios": "^0.19.0",
     "haversine": "^1.1.1",
     "react": "16.8.1",

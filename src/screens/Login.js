@@ -6,17 +6,53 @@ import {
   TextInput,
   TouchableOpacity,
   Text,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import EvilIconsIcon from "react-native-vector-icons/EvilIcons";
 import api from '../../utils/api';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Login extends Component {
 
 state = {
-  username: '',
-  password: ''
+  username: "Noobslay3r",
+  password: "password123456",
+  token: ""
 }
+
+componentDidMount() {
+  // console.log("muppet")
+  api.userLogin(this.state)
+  .then(token => {
+    console.log(token.data)
+    this.setState({token: token.data})
+    this.storeData()
+    console.log("muppet boogaloo")
+    this.retrieveData()
+  })
+}
+
+storeData = async () => {
+  try {
+    await AsyncStorage.setItem('userId', this.state.token);
+  } catch (error) {
+    console.error(error)
+  }
+};
+
+retrieveData = async () => {
+  try {
+    const value = await AsyncStorage.getItem('userId');
+    // console.log(value)
+    if (value !== null) {
+      // We have data!!
+      // console.log("what?")
+      console.log(value);
+    }
+  } catch (error) {
+    // Error retrieving data
+  }
+};
 
   render() {
 
