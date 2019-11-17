@@ -93,7 +93,7 @@ class Map extends React.Component {
         this.setState({
           markers: results.data,
         });
-        console.log(this.state.markers)
+        // console.log(this.state.markers)
       })
       .catch(err => console.log(err));
 
@@ -196,7 +196,7 @@ class Map extends React.Component {
             unit: 'mile',
           })
 
-        console.log(quarterMilePassed)
+        // console.log(quarterMilePassed)
         if (quarterMilePassed) {
           api.getAllMarkers()
           .then(newMarkers => {
@@ -206,7 +206,7 @@ class Map extends React.Component {
                 { latitude, longitude },
                 { latitude: newMarker.latitude, longitude: newMarker.longitude },
                 {
-                  threshold: .25,
+                  threshold: .5,
                   unit: 'mile',
                 },
               ) ? newMarker.mentioned = true : newMarker.mentioned = false;
@@ -237,10 +237,6 @@ class Map extends React.Component {
   }
 
 
-
-
-
-
   // -----------------------------------textToVoice-------------------------
   initTts = async () => {
     const voices = await Tts.voices();
@@ -253,22 +249,22 @@ class Map extends React.Component {
     if (voices && voices.length > 0) {
       selectedVoice = voices[0].id;
       try {
-        await Tts.setDefaultLanguage(voices[3].language);
+        await Tts.setDefaultLanguage(voices[102].language);
       } catch (err) {
         // My Samsung S9 has always this error: "Language is not supported"
         console.log(`setDefaultLanguage error `, err);
       }
 
 
-      // for (let voice of voices) {
-      //   if(voice.name === "en-us-x-sfg-local"){
+      for (let voice of voices) {
+        if(voice.name === "en-us-x-sfg-local"){
 
-      //     console.log("---------------",voice)
-      //     console.log(voices.indexOf(voice))
-      //   }
-      // }
-      console.log(voices[103])
-      await Tts.setDefaultVoice(voices[103].id);
+          console.log("---------------",voice)
+          console.log(voices.indexOf(voice))
+        }
+      }
+      console.log(voices[102])
+      await Tts.setDefaultVoice(voices[102].id);
       this.setState({
         voices: availableVoices,
         selectedVoice,
