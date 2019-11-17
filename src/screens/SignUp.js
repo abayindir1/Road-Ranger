@@ -21,7 +21,7 @@ function SignUp() {
         <ImageBackground
           style={styles.rect2}
           imageStyle={styles.rect2_imageStyle}
-          source={require('../assets/images/Gradient_LZGIVfZ.png')}>
+          source={require('../assets/images/mapBackGround.png')}>
           <View style={styles.ProgressBarColumn}>
             <View style={styles.ProgressBar}>
               <View style={styles.icon2Row}>

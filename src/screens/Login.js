@@ -18,7 +18,7 @@ function Login() {
         <ImageBackground
           style={styles.rect}
           imageStyle={styles.rect_imageStyle}
-          source={require('../assets/images/Gradient_LZGIVfZ.png')}>
+          source={require('../assets/images/mapBackGround.png')}>
           <View style={styles.LogoColumn}>
             <View style={styles.Logo}>
               <View style={styles.stackFiller} />
