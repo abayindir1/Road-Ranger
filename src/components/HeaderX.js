@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import LogoHeader from "./LogoHeader";
+import GradeBg from "./GradeBG";
 
 function HeaderX(props) {
   return (
