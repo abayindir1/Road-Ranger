@@ -41,6 +41,10 @@ class Map extends React.Component {
       latitudeDelta: 1,
       longitudeDelta: 1,
     },
+    lastReferencePosition: {
+      latitude: 32.844297,
+      longitude: -96.784919,
+    },
     mapUpdateInterval: '',
     markers: [],
     started: '',
@@ -94,7 +98,10 @@ Tts.addEventListener("tts-start", event =>
       .getAllMarkers()
       .then(results => {
         console.log('inside call')
-        console.log(results);
+        // console.log(results);
+        //find all markers with mentioned equal to true, and check them against the newly imported markers
+        //only one marker for every mile distance
+        //get markers every mile
         for (let marker of results.data) {
           marker.mentioned = false;
         }
@@ -269,6 +276,7 @@ Tts.addEventListener("tts-start", event =>
           title={marker.title}
           description={marker.description}
           onPress={this.readText}
+          key={marker._id}
 
         >
           {/* <Image
