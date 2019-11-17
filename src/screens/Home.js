@@ -67,6 +67,8 @@ class Home extends Component {
     //     Tts.getInitStatus().then(this.initTts);
   }
 
+
+
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
@@ -178,39 +180,10 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Maps toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
+        <Maps toggleModal = {() => this.setModalVisible(false)} isVisible={this.state.modalVisible} toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
         <TouchableOpacity style={styles.button} onPress={() => { this.setModalVisible(true)}} onLongPress={this._startRecognizing}>
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          <View style={{ marginTop: 22 }}>
-            <View>
-
-              <Button title = 'Pothole'/>
-              <Button title = 'Accident'/>
-              <Button title = 'Speed Trap'/>
-              <Button title = 'Road Damage'/>
-              <Button title = 'Road Closed'/>
-
-              <Button title = 'Nice View'/>
-              <Button title = 'Clean Bathrooms'/>
-              <Button title = 'Freshly Paved Road'/>
-
-              <TouchableHighlight
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text>Hide Modal</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
 
 
       </View>
