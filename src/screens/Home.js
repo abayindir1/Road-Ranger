@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -17,6 +18,7 @@ import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommun
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import VoiceTest from '../components/VoiceToText';
 import Maps from '../components/Maps';
+
 // import MaterialMapView from "../components/MaterialMapView";
 
 import TalkButton from '../components/TalkButton';
@@ -38,7 +40,16 @@ class Home extends Component {
     results: [],
     partialResults: [],
     hasSpeechRecorded: false,
+    modalVisible: false,
+    // ---------------------------------
+    // voices: [],
+    //     ttsStatus: "initiliazing",
+    //     selectedVoice: null,
+    //     speechRate: 0.5,
+    //     speechPitch: 1,
+    //     text: "hey apo how are you",
   };
+
   constructor(props) {
     super(props);
     Voice.onSpeechStart = this.onSpeechStart;
@@ -49,7 +60,13 @@ class Home extends Component {
     Voice.onSpeechPartialResults = this.onSpeechPartialResults;
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
     this.requestAudioPermission();
+
+    
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
   }
+
   async requestAudioPermission() {
     try {
       const granted = await PermissionsAndroid.request(
@@ -89,12 +106,18 @@ class Home extends Component {
   };
   onSpeechError = e => {
     console.log('onSpeechError: ', e, 'speak again please');
+    Alert.alert(
+      "Please speak again."
+    )
     this.setState({
       error: JSON.stringify(e.error),
     });
   };
   onSpeechResults = e => {
     console.log('onSpeechResults: ', e, 'Speech recognition has finished');
+    Alert.alert(
+      "Speech recognition has finished."
+    )
     this.setState({
       results: e.value,
       hasSpeechRecorded: true,
@@ -179,8 +202,40 @@ class Home extends Component {
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.testButton} onPress={() => this.props.navigation.navigate("Login")} onLongPress={() => this.props.navigation.navigate("SignUp")}>
+
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View style={{ marginTop: 22 }}>
+            <View>
+
+              <Button onPress={() => api.create} title = 'Pothole'/>
+              <Button title = 'Accident'/>
+              <Button title = 'Speed Trap'/>
+              <Button title = 'Road Damage'/>
+              <Button title = 'Road Closed'/>
+
+              <Button title = 'Nice View'/>
+              <Button title = 'Clean Bathrooms'/>
+              <Button title = 'Freshly Paved Road'/>
+
+              <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Text>Hide Modal</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+
+
       </View>
     );
   }
@@ -251,3 +306,4 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
+
