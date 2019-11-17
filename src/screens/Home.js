@@ -192,7 +192,7 @@ class Home extends Component {
           <View style={{ marginTop: 22 }}>
             <View>
 
-              <Button onPress={() => api.create} title = 'Pothole'/>
+              <Button title = 'Pothole'/>
               <Button title = 'Accident'/>
               <Button title = 'Speed Trap'/>
               <Button title = 'Road Damage'/>
