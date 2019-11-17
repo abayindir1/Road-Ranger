@@ -1,27 +1,19 @@
-
-import React, {Component} from 'react';
-import {
-  StyleSheet,
-  ImageBackground,
-  View,
-  TouchableOpacity,
-  Text,
-  Nav,
-} from 'react-native';
+import React, { Component } from "react";
+import { StyleSheet, View, Alert, TouchableOpacity, Modal, TouchableHighlight, Text, Button } from "react-native";
 import Voice from 'react-native-voice';
-import {PermissionsAndroid} from 'react-native';
-import {Header, Button, Left, Right, Body, Icon} from 'native-base';
-import Map from '../components/Map';
-import NavBar from '../components/NavBar';
-import LogoHeader from '../components/LogoHeader';
-import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import IoniconsIcon from 'react-native-vector-icons/Ionicons';
-import VoiceTest from '../components/VoiceToText';
-import Maps from '../components/Maps';
 
+import { PermissionsAndroid } from 'react-native';
+import Map from "../components/Map";
+import NavBar from "../components/NavBar";
+import LogoHeader from "../components/LogoHeader";
+import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import IoniconsIcon from "react-native-vector-icons/Ionicons";
+import VoiceTest from '../components/VoiceToText'
+import Maps from "../components/Maps"
+import TextTest from '../components/TextToVoice'
 // import MaterialMapView from "../components/MaterialMapView";
-
-import TalkButton from '../components/TalkButton';
+import TalkButton from "../components/TalkButton";
+import api from '../../utils/api';
 
 class Home extends Component {
 
@@ -59,9 +51,21 @@ class Home extends Component {
     Voice.onSpeechResults = this.onSpeechResults;
     Voice.onSpeechPartialResults = this.onSpeechPartialResults;
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
-    this.requestAudioPermission();
-
-    
+    this.requestAudioPermission()
+    // ---------------------------------------------------------
+    // Tts.addEventListener("tts-start", event =>
+    //       this.setState({ ttsStatus: "started" })
+    //     );
+    //     Tts.addEventListener("tts-finish", event =>
+    //       this.setState({ ttsStatus: "finished" })
+    //     );
+    //     Tts.addEventListener("tts-cancel", event =>
+    //       this.setState({ ttsStatus: "cancelled" })
+    //     );
+    //     Tts.setDefaultRate(this.state.speechRate);
+    //     Tts.setDefaultPitch(this.state.speechPitch);
+    //     Tts.getInitStatus().then(this.initTts);
+  }
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
@@ -73,7 +77,8 @@ class Home extends Component {
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
         {
           title: 'Voice to text need RecordPermission',
-          message: 'Voice to text needs access to your microphone',
+          message:
+            'Voice to text needs access to your microphone',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
@@ -124,11 +129,7 @@ class Home extends Component {
     });
   };
   onSpeechPartialResults = e => {
-    console.log(
-      'Show them that you are listening',
-      'onSpeechPartialResults: ',
-      e,
-    );
+    console.log('Show them that you are listening', 'onSpeechPartialResults: ', e);
     this.setState({
       partialResults: e.value,
     });
@@ -145,10 +146,10 @@ class Home extends Component {
     });
     try {
       await Voice.start('en_US', {
-        RECOGNIZER_ENGINE: 'GOOGLE',
-        EXTRA_PARTIAL_RESULTS: true,
+        "RECOGNIZER_ENGINE": "GOOGLE",
+        "EXTRA_PARTIAL_RESULTS": true
       });
-      console.log('The speech recognizing function us running');
+      console.log('The speech recognizing function us running')
     } catch (e) {
       console.error(e);
     }
@@ -169,40 +170,16 @@ class Home extends Component {
       end: '',
     });
   };
-  toggleHasSpeechRecorded = hasSpeechRecorded =>
-    this.setState({hasSpeechRecorded});
+  toggleHasSpeechRecorded = (hasSpeechRecorded) => this.setState({ hasSpeechRecorded })
+
+
+
+
   render() {
     return (
       <View style={styles.container}>
-        <Header style={styles.header}>
-          <ImageBackground
-            style={styles.imageBackground}
-            source={require('../assets/images/mapBackGround.png')}>
-            <Left>
-              <Button transparent>
-                <Icon name="menu" />
-              </Button>
-            </Left>
-            {/* <Body style={styles.body}> */}
-            <Text style={styles.text}>OЯ</Text>
-            {/* </Body> */}
-            <Right />
-          </ImageBackground>
-        </Header>
-        <Maps
-          toggleHasSpeechRecorded={this.toggleHasSpeechRecorded}
-          hasSpeechRecorded={this.state.hasSpeechRecorded}
-          style={styles.mainMap}
-          speechRecognitionResults={this.state.results}
-        />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => console.log('yo')}
-          onLongPress={this._startRecognizing}>
-          <TalkButton style={styles.talkButton} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.testButton} onPress={() => this.props.navigation.navigate("Login")} onLongPress={() => this.props.navigation.navigate("SignUp")}>
-
+        <Maps toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
+        <TouchableOpacity style={styles.button} onPress={() => { this.setModalVisible(true)}} onLongPress={this._startRecognizing}>
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
         <Modal
@@ -237,26 +214,142 @@ class Home extends Component {
 
 
       </View>
-    );
+    )
+
   }
 }
 
 const styles = StyleSheet.create({
   mainMap: {
     height: '100%',
-    zIndex: -1,
+    zIndex: -1
   },
   container: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,1)',
+    backgroundColor: "rgba(0,0,0,1)",
     opacity: 1,
-    borderColor: '#000000',
-    borderWidth: 5,
+    borderColor: "#000000",
+    borderWidth: 0
+  },
+  background: {
+    top: 0,
+    left: 0,
+    width: 500,
+    height: 812,
+    position: "absolute"
+  },
+  navdisplay: {
+    top: 0,
+    left: 1,
+    width: 375,
+    height: 82,
+    position: "absolute"
+  },
+  navBar: {
+    top: 0,
+    left: 0,
+    width: 375,
+    height: 82,
+    position: "absolute"
+  },
+  homeButton: {
+    top: 38,
+    left: 161,
+    width: 45,
+    height: 44,
+    position: "absolute"
+  },
+  logoHeader: {
+    top: 0,
+    left: 0,
+    width: 45,
+    height: 44,
+    position: "absolute"
+  },
+  button2: {
+    top: 3,
+    left: 1,
+    width: 44,
+    height: 41,
+    position: "absolute"
+  },
+  logoHeaderStack: {
+    width: 45,
+    height: 44
+  },
+  profileButton: {
+    top: 41,
+    left: 26,
+    width: 25,
+    height: 25,
+    position: "absolute"
+  },
+  icon: {
+    top: 0,
+    left: 0,
+    position: "absolute",
+    color: "rgba(255,255,255,1)",
+    fontSize: 26,
+    width: 25,
+    height: 25
+  },
+  button5: {
+    top: 0,
+    left: 0,
+    width: 26,
+    height: 27,
+    position: "absolute"
+  },
+  iconStack: {
+    width: 26,
+    height: 27
+  },
+  button4: {
+    top: 41,
+    left: 332,
+    width: 20,
+    height: 26,
+    position: "absolute"
+  },
+  icon2: {
+    top: 0,
+    left: 4,
+    position: "absolute",
+    color: "rgba(255,255,255,1)",
+    fontSize: 26
+  },
+  button3: {
+    top: 0,
+    left: 0,
+    width: 26,
+    height: 31,
+    position: "absolute"
+  },
+  icon2Stack: {
+    width: 26,
+    height: 31,
+    marginLeft: -4
+  },
+  navBarStack: {
+    width: 375,
+    height: 82
+  },
+  materialMapView: {
+    top: 97,
+    left: 1,
+    width: 375,
+    height: 715,
+    backgroundColor: "rgba(255,255,255,1)",
+    position: "absolute",
+    opacity: 1,
+    borderColor: "#000000",
+    borderWidth: 0,
+    borderTopWidth: 5
   },
   button: {
-    alignSelf: 'center',
+    alignSelf: "center",
     position: 'absolute',
-    bottom: '2%',
+    bottom: "2%"
   },
   testButton: {
     alignSelf: "center",
@@ -265,45 +358,13 @@ const styles = StyleSheet.create({
   },
   talkButton: {
     width: 136,
-    height: 140,
+    height: 140
   },
   backgroundStack: {
     width: 376,
     height: 812,
-    marginLeft: -1,
-  },
-  text: {
-    flex: 3,
-    alignSelf: 'center',
-    position: 'absolute',
-    width: 45,
-    height: 36,
-    color: 'rgba(255,255,255,1)',
-    fontSize: 50,
-  },
-  body: {
-    flex: 2,
-    alignSelf: 'center',
-    position: 'absolute',
-    width: 100,
-    height: 100,
-  },
-  header: {
-    width: 450,
-    height: 80,
-    marginLeft: -16,
-    borderColor: '#000000',
-    borderWidth: 1,
-  },
-  imageBackground: {
-    flex: 1,
-    width: 450,
-    height: 80,
-    flexDirection: 'column',
-    backgroundColor: 'transparent',
-    justifyContent: 'flex-start',
-  },
+    marginLeft: -1
+  }
 });
 
 export default Home;
-

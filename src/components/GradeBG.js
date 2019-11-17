@@ -12,7 +12,7 @@ function GradeBG(props) {
           }
         ]}
         imageStyle={styles.rect2_imageStyle}
-        source={require("../assets/images/mapBackGround.png")}
+        source={require("../assets/images/Gradient_LZGIVfZ.png")}
       />
     </View>
   );
