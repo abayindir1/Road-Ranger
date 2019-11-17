@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View,Alert, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Alert, TouchableOpacity, Modal, TouchableHighlight, Text, Button } from "react-native";
 import Voice from 'react-native-voice';
 
 import { PermissionsAndroid } from 'react-native';
@@ -32,6 +32,7 @@ class Home extends Component {
     results: [],
     partialResults: [],
     hasSpeechRecorded: false,
+    modalVisible: false,
     // ---------------------------------
     // voices: [],
     //     ttsStatus: "initiliazing",
@@ -40,7 +41,7 @@ class Home extends Component {
     //     speechPitch: 1,
     //     text: "hey apo how are you",
   };
-  
+
   constructor(props) {
     super(props);
     Voice.onSpeechStart = this.onSpeechStart;
@@ -64,6 +65,10 @@ class Home extends Component {
     //     Tts.setDefaultRate(this.state.speechRate);
     //     Tts.setDefaultPitch(this.state.speechPitch);
     //     Tts.getInitStatus().then(this.initTts);
+  }
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
   }
 
   async requestAudioPermission() {
@@ -167,16 +172,47 @@ class Home extends Component {
   };
   toggleHasSpeechRecorded = (hasSpeechRecorded) => this.setState({ hasSpeechRecorded })
 
- 
+
 
 
   render() {
     return (
       <View style={styles.container}>
         <Maps toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
-        <TouchableOpacity style={styles.button} onPress={() => console.log('yo')} onLongPress={this._startRecognizing}>
+        <TouchableOpacity style={styles.button} onPress={() => { this.setModalVisible(true)}} onLongPress={this._startRecognizing}>
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View style={{ marginTop: 22 }}>
+            <View>
+
+              <Button onPress={() => api.create} title = 'Pothole'/>
+              <Button title = 'Accident'/>
+              <Button title = 'Speed Trap'/>
+              <Button title = 'Road Damage'/>
+              <Button title = 'Road Closed'/>
+
+              <Button title = 'Nice View'/>
+              <Button title = 'Clean Bathrooms'/>
+              <Button title = 'Freshly Paved Road'/>
+
+              <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Text>Hide Modal</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+
+
       </View>
     )
 
@@ -332,41 +368,3 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
-
-
-    // <View style={styles.container}>
-    //   <View style={styles.backgroundStack}>
-    //     <Map style={styles.background} />
-    //     <View style={styles.navdisplay}>
-    //       <View style={styles.navBarStack}>
-    //         <NavBar style={styles.navBar} />
-    //         <View style={styles.homeButton}>
-    //           <View style={styles.logoHeaderStack}>
-    //             <LogoHeader style={styles.logoHeader} />
-    //             <TouchableOpacity style={styles.button2} />
-    //           </View>
-    //         </View>
-    //         <View style={styles.profileButton}>
-    //           <View style={styles.iconStack}>
-    //             <MaterialCommunityIconsIcon
-    //               name="account-circle"
-    //               style={styles.icon}
-    //             />
-    //             <TouchableOpacity style={styles.button5} />
-    //           </View>
-    //         </View>
-    //         <TouchableOpacity style={styles.button4}>
-    //           <View style={styles.icon2Stack}>
-    //             <IoniconsIcon name="ios-menu" style={styles.icon2} />
-    //             <TouchableOpacity style={styles.button3} />
-    //           </View>
-    //         </TouchableOpacity>
-    //       </View>
-    //     </View>
-    //     <Maps style={styles.materialMapView} />
-    //     {/* <MaterialMapView style={styles.materialMapView} /> */}
-    //     <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate("SignUp")} onLongPress={() => props.navigation.navigate("Login")}>
-    //       <TalkButton style={styles.talkButton} />
-    //     </TouchableOpacity>
-    //   </View>
-    // </View>

@@ -22,7 +22,7 @@ import {
 
 import MapView from 'react-native-maps';
 
-import {Marker} from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 
 import haversine from 'haversine';
 
@@ -41,6 +41,10 @@ class Map extends React.Component {
       latitudeDelta: 1,
       longitudeDelta: 1,
     },
+    lastReferencePosition: {
+      latitude: "",
+      longitude: ""
+    },
     mapUpdateInterval: '',
     markers: [],
     started: '',
@@ -52,49 +56,37 @@ class Map extends React.Component {
     partialResults: [],
 
     voices: [],
-        ttsStatus: "initiliazing",
-        selectedVoice: null,
-        speechRate: 0.5,
-        speechPitch: 1,
-        text: "hey apo how are you",
+    ttsStatus: "initiliazing",
+    selectedVoice: null,
+    speechRate: 0.5,
+    speechPitch: 1,
+    text: "hey apo how are you",
   };
 
   constructor(props) {
     super(props);
-Tts.addEventListener("tts-start", event =>
-          this.setState({ ttsStatus: "started" })
-        );
-        Tts.addEventListener("tts-finish", event =>
-          this.setState({ ttsStatus: "finished" })
-        );
-        Tts.addEventListener("tts-cancel", event =>
-          this.setState({ ttsStatus: "cancelled" })
-        );
-        Tts.setDefaultRate(this.state.speechRate);
-        Tts.setDefaultPitch(this.state.speechPitch);
-        Tts.getInitStatus().then(this.initTts);
+    Tts.addEventListener("tts-start", event =>
+      this.setState({ ttsStatus: "started" })
+    );
+    Tts.addEventListener("tts-finish", event =>
+      this.setState({ ttsStatus: "finished" })
+    );
+    Tts.addEventListener("tts-cancel", event =>
+      this.setState({ ttsStatus: "cancelled" })
+    );
+    Tts.setDefaultRate(this.state.speechRate);
+    Tts.setDefaultPitch(this.state.speechPitch);
+    Tts.getInitStatus().then(this.initTts);
   }
 
   componentDidMount() {
-    console.log('Boogaloo');
-    const aMarker = {
-      latitude: 32.844297,
-      longitude: -96.784919,
-      title: 'pothole',
-      classification: 'danger',
-    };
-    const anotherMarker = {
-      latitude: 32.86,
-      longitude: -96.784919,
-      title: 'vista',
-      classification: 'chance',
-    };
-    console.log('about to make call')
     api
       .getAllMarkers()
       .then(results => {
-        console.log('inside call')
-        console.log(results);
+        // console.log(results);
+        //find all markers with mentioned equal to true, and check them against the newly imported markers
+        //only one marker for every mile distance
+        //get markers every mile
         for (let marker of results.data) {
           marker.mentioned = false;
         }
@@ -110,7 +102,7 @@ Tts.addEventListener("tts-start", event =>
     //   .then(newMarker => console.log(newMarker))
     //   .catch(err => console.log(err));
   }
-   
+
 
   //requesting location perimission
   async requestFineLocationPermission() {
@@ -137,45 +129,111 @@ Tts.addEventListener("tts-start", event =>
     }
   }
 
+  //fired just about every second when the user location changes
+
   onUserLocationChange(coordinates) {
     // console.log(coordinates);
-    const {latitude, longitude} = coordinates;
+    const { latitude, longitude } = coordinates;
 
 
     if (this.props.hasSpeechRecorded) {
       console.log('Make call to send coordinates');
       console.log('in the .then, this.setState({ markers: this.state.markers.concat({ your marker object }) })')
-      console.log({ markers: this.state.markers, coordinates, speechRecognitionResults: this.props.speechRecognitionResults[0]})
+      console.log({ markers: this.state.markers, coordinates, speechRecognitionResults: this.props.speechRecognitionResults[0] })
       api.makeMarker({
         latitude,
         longitude,
         title: this.props.speechRecognitionResults[0]
       })
-
+//concat to state and then reset
       this.props.toggleHasSpeechRecorded(false);
     }
 
-    const closeEnoughArr = [];
+
     if (this.state.markers.length > 0) {
       for (let marker of this.state.markers) {
-       const closeEnough = haversine(
-            {latitude, longitude},
-            {latitude: marker.latitude, longitude: marker.longitude},
-            {
-              threshold: 0.25,
-              unit: 'mile',
-            },
-          )
+        const closeEnough = haversine(
+          { latitude, longitude },
+          { latitude: marker.latitude, longitude: marker.longitude },
+          {
+            threshold: .25,
+            unit: 'mile',
+          },
+        )
 
-        if(closeEnough && marker.mentioned === false) {
+        // console.log({[marker.title]: closeEnough})
+
+        if (closeEnough && marker.mentioned === false) {
           this.readText(marker.title)
-          console.log(marker.title)
+          // console.log(marker.title)
+          // console.log("what's going on?")
           marker.mentioned = true
         }
+
+      }
+      // console.log(this.state.lastReferencePosition.latitude)
+      if (!this.state.lastReferencePosition.latitude) {
+        // console.log("setting reference")
+        this.setState({
+          lastReferencePosition: {
+            latitude,
+            longitude
+          }
+        })
+      } else {
+        // console.log("reference position" + this.state.lastReferencePosition.latitude + this.state.lastReferencePosition.longitude)
+        // console.log("current location: " + latitude + longitude )
+        // console.log("distance: " + haversine({ latitude, longitude },
+        //   { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
+        //   {
+        //     unit: 'mile',
+        //   }))
         
+          //for some reason, this particular haversine threshold didn't work, and had to be done manually, I have literally no idea why
+        let quarterMilePassed = .25 < haversine({ latitude, longitude },
+          { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
+          {
+            unit: 'mile',
+          })
+
+        console.log(quarterMilePassed)
+        if (quarterMilePassed) {
+          api.getAllMarkers()
+          .then(newMarkers => {
+
+            for (let newMarker of newMarkers.data) {
+              haversine(
+                { latitude, longitude },
+                { latitude: newMarker.latitude, longitude: newMarker.longitude },
+                {
+                  threshold: .25,
+                  unit: 'mile',
+                },
+              ) ? newMarker.mentioned = true : newMarker.mentioned = false;
+
+            }
+
+            this.setState({
+              markers: newMarkers.data,
+              lastReferencePosition: {
+                latitude,
+                longitude
+              },
+  
+  
+            })
+
+            // console.log(this.state.markers)
+
+          })
+          .catch(err => console.error(err))
+
+        }
+      }
+
+
+      // console.log(closeEnoughArr)
     }
-    }
-    // console.log(closeEnoughArr)
   }
 
 
@@ -183,8 +241,8 @@ Tts.addEventListener("tts-start", event =>
 
 
 
-   // -----------------------------------textToVoice-------------------------
-   initTts = async () => {
+  // -----------------------------------textToVoice-------------------------
+  initTts = async () => {
     const voices = await Tts.voices();
     const availableVoices = voices
       .filter(v => !v.networkConnectionRequired && !v.notInstalled)
@@ -252,7 +310,7 @@ Tts.addEventListener("tts-start", event =>
       <Button
         title={`${item.language} - ${item.name || item.id}`}
         color={this.state.selectedVoice === item.id ? undefined : "#969696"}
-        onPress={() => this.onVoicePress(item)}
+      // onPress={() => this.onVoicePress(item)}
       />
     );
   };
@@ -265,10 +323,11 @@ Tts.addEventListener("tts-start", event =>
     if (this.state.markers.length > 0) {
       mapMarkers = this.state.markers.map(marker => (
         <Marker
-          coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
+          coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
           title={marker.title}
           description={marker.description}
-          onPress={this.readText}
+          // onPress={() => this.readText("boogaloo")}
+          key={marker._id}
 
         >
           {/* <Image
@@ -293,7 +352,7 @@ Tts.addEventListener("tts-start", event =>
             this.onUserLocationChange(result.nativeEvent.coordinate)
           }
           //maps out markers with nested images. Markers can be assigned images by classification
-          style={{width: '100%', height: "100%"}}>
+          style={{ width: '100%', height: "100%" }}>
           {mapMarkers}
         </MapView>
       </>
