@@ -10,6 +10,9 @@ import {
   PermissionsAndroid,
   Image,
   TouchableHighlight,
+  Modal,
+  Alert,
+  Button
 } from 'react-native';
 
 import {
@@ -206,7 +209,7 @@ class Map extends React.Component {
                 { latitude, longitude },
                 { latitude: newMarker.latitude, longitude: newMarker.longitude },
                 {
-                  threshold: .5,
+                  threshold: .25,
                   unit: 'mile',
                 },
               ) ? newMarker.mentioned = true : newMarker.mentioned = false;
@@ -351,6 +354,35 @@ class Map extends React.Component {
           style={{ width: '100%', height: "100%" }}>
           {mapMarkers}
         </MapView>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.props.isVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View style={{ marginTop: 22 }}>
+            <View>
+
+              <Button title = 'Pothole'/>
+              <Button title = 'Accident'/>
+              <Button title = 'Speed Trap'/>
+              <Button title = 'Road Damage'/>
+              <Button title = 'Road Closed'/>
+
+              <Button title = 'Nice View'/>
+              <Button title = 'Clean Bathrooms'/>
+              <Button title = 'Freshly Paved Road'/>
+
+              <TouchableHighlight
+                onPress={
+              (this.props.toggleModal)
+                }>
+                <Text>Hide Modal</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
       </>
     );
   }
