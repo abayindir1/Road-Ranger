@@ -188,6 +188,7 @@ class Map extends React.Component {
         //   {
         //     unit: 'mile',
         //   }))
+        
           //for some reason, this particular haversine threshold didn't work, and had to be done manually, I have literally no idea why
         let quarterMilePassed = .25 < haversine({ latitude, longitude },
           { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
