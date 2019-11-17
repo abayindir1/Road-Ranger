@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Text,
+
   StatusBar,
 } from 'react-native';
 import EvilIconsIcon from 'react-native-vector-icons/EvilIcons';
@@ -62,7 +63,15 @@ function Login() {
                     <Text style={styles.text2}>Get Started</Text>
                   </TouchableOpacity>
                 </View>
+                <View style={styles.UsernameColumnFiller} />
+                <TouchableOpacity
+                  onPress={() => props.navigation.navigate("Channels")}
+                  style={styles.button}
+                >
+                  <Text style={styles.text2}>Get Started</Text>
+                </TouchableOpacity>
               </View>
+
             </KeyboardAwareScrollView>
           </View>
           <View style={styles.LogoColumnFiller} />
@@ -77,15 +86,20 @@ function Login() {
             <Text style={styles.NeedHelp}>Need Help?</Text>
           </View>
         </ImageBackground>
+        <StatusBar
+          animated={false}
+          barStyle="light-content"
+          hidden={false}
+          backgroundColor="rgba(0,0,0,0)"
+        />
+
       </View>
-      <StatusBar
-        animated={false}
-        barStyle="light-content"
-        hidden={false}
-        backgroundColor="rgba(0,0,0,0)"
-      />
-    </View>
-  );
+    );
+
+  }
+
+
+
 }
 
 const styles = StyleSheet.create({

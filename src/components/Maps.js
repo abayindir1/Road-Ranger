@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   SafeAreaView,
@@ -68,7 +69,6 @@ class Map extends React.Component {
     api
       .getAllMarkers()
       .then(results => {
-        // console.log(results);
         this.setState({
           markers: results.data,
         });
@@ -106,11 +106,10 @@ class Map extends React.Component {
     }
   }
 
- 
-
   onUserLocationChange(coordinates) {
     // console.log(coordinates);
     const {latitude, longitude} = coordinates;
+
 
     if (this.props.hasSpeechRecorded) {
       console.log('Make call to send coordinates');
@@ -148,6 +147,7 @@ class Map extends React.Component {
           coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
           title={marker.title}
           description={marker.description}
+          key = {marker._id}
           // onPress
         >
           {/* <Image
@@ -168,14 +168,12 @@ class Map extends React.Component {
             ...this.state.currentPosition,
           }}
           onUserLocationChange={result =>
-            this.onUserLocationChange(result.nativeEvent.coordinate)//-----
+            this.onUserLocationChange(result.nativeEvent.coordinate)
           }
           //maps out markers with nested images. Markers can be assigned images by classification
           style={{width: '100%', height: "100%"}}>
           {mapMarkers}
         </MapView>
-
-       
       </>
     );
   }

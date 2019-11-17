@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+
 } from 'react-native';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -30,9 +31,9 @@ function SignUp() {
                 <EntypoIcon name="time-slot" style={styles.icon3} />
                 <View style={styles.rect5} />
               </View>
-              <View style={styles.icon2RowFiller} />
-              <FontAwesomeIcon name="circle" style={styles.icon4} />
+              <Text style={styles.text3}>CREATE ACCOUNT</Text>
             </View>
+
             <Text style={styles.text3}>CREATE ACCOUNT</Text>
           </View>
           <View style={styles.ProgressBarColumnFiller} />

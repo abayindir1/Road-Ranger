@@ -18,9 +18,17 @@ import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import VoiceTest from '../components/VoiceToText';
 import Maps from '../components/Maps';
 // import MaterialMapView from "../components/MaterialMapView";
+
 import TalkButton from '../components/TalkButton';
 
 class Home extends Component {
+
+
+  static navigationOptions = {
+    title: 'Home',
+  };
+
+
   state = {
     recognized: '',
     pitch: '',
@@ -170,6 +178,9 @@ class Home extends Component {
           onLongPress={this._startRecognizing}>
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
+        <TouchableOpacity style={styles.testButton} onPress={() => this.props.navigation.navigate("Login")} onLongPress={() => this.props.navigation.navigate("SignUp")}>
+          <TalkButton style={styles.talkButton} />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -191,6 +202,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     bottom: '2%',
+  },
+  testButton: {
+    alignSelf: "center",
+    position: 'absolute',
+    bottom: "20%"
   },
   talkButton: {
     width: 136,
