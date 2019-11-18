@@ -14,26 +14,22 @@ let fakeUserLogin = {
 export default {
   getAllMarkers() {
     console.log('electric');
-
-    return axios.get('http://10.8.237.95:8000/api/markers');
-
+    return axios.get('http://10.8.239.204:8000/api/markers');
 
     // return axios.get('https://jsonplaceholder.typicode.com/posts');
   },
 
-
-    return axios.post('http://10.8.237.95:8000/api/markers/', marker);
-
+  makeMarker(marker) {
+    return axios.post('http://10.8.239.204:8000/api/markers/', marker);
 
   },
 
   userSignup (signupInfo) { 
     console.log(signupInfo)
-    return axios.post('http://10.8.237.95:8000/api/users/signup', signupInfo)
+    return axios.post('http://10.8.239.204:8000/api/users/signup', signupInfo)
   },
 
   userLogin (loginInfo) {
-    return axios.post('http://10.8.237.95:8000/api/users/login', loginInfo)
-
+    return axios.post('http://10.8.239.204:8000/api/users/login', loginInfo)
   }
 };
