@@ -17,10 +17,22 @@ import api from '../../utils/api';
 
 class Home extends Component {
 
-
-  static navigationOptions = {
-    title: 'Home',
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'RЯ',
+      headerRight: () => (
+        <Button
+          onPress={navigation.getParam('increaseCount')}
+          title="+1"
+          color="#fff"
+        />
+      ),
+    };
   };
+
+  // static navigationOptions = {
+  //   title: 'RЯ'
+  // };
 
 
   state = {
@@ -186,6 +198,7 @@ class Home extends Component {
         </TouchableOpacity>
 
 
+
       </View>
     )
 
@@ -193,6 +206,45 @@ class Home extends Component {
 }
 
 const styles = StyleSheet.create({
+  modal:{
+    backgroundColor: '#00000082',
+    padding: 30,
+    height: 800,
+    alignContent: "center",
+  },
+  markerButtons:{
+    color:'#bebcbc',
+    backgroundColor: "black",
+    width: "70%",
+    fontSize: 20,
+    padding: 8,
+    textAlign: 'center',
+    borderRadius: 40,
+    margin: 10,
+    marginLeft: 50
+  },
+  markerButtons2:{
+    color:'black',
+    backgroundColor: "#bebcbc",
+    width: "70%",
+    fontSize: 20,
+    padding: 8,
+    textAlign: 'center',
+    borderRadius: 40,
+    margin: 10,
+    marginLeft: 50
+  },
+  hideModalButton:{
+    color:'black',
+    backgroundColor: "turquoise",
+    width: "70%",
+    fontSize: 20,
+    padding: 8,
+    textAlign: 'center',
+    borderRadius: 40,
+    margin: 10,
+    marginLeft: 50
+  },
   mainMap: {
     height: '100%',
     zIndex: -1
