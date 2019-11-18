@@ -418,5 +418,46 @@ class Map extends React.Component {
     );
   }
 }
+const styles = StyleSheet.create({
+  modal:{
+    backgroundColor: '#00000082',
+    padding: 30,
+    height: 800,
+    alignContent: "center",
+  },
+  markerButtons:{
+    color:'#bebcbc',
+    backgroundColor: "black",
+    width: "70%",
+    fontSize: 20,
+    padding: 8,
+    textAlign: 'center',
+    borderRadius: 40,
+    margin: 10,
+    marginLeft: 50
+  },
+  markerButtons2:{
+    color:'black',
+    backgroundColor: "#bebcbc",
+    width: "70%",
+    fontSize: 20,
+    padding: 8,
+    textAlign: 'center',
+    borderRadius: 40,
+    margin: 10,
+    marginLeft: 50
+  },
+  hideModalButton:{
+    color:'black',
+    backgroundColor: "turquoise",
+    width: "70%",
+    fontSize: 20,
+    padding: 8,
+    textAlign: 'center',
+    borderRadius: 40,
+    margin: 10,
+    marginLeft: 50
+  },
+});
 export default Map;
 
