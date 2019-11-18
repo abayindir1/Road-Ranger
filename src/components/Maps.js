@@ -12,7 +12,8 @@ import {
   TouchableHighlight,
   Modal,
   Alert,
-  Button
+  Button,
+  TextInput
 } from 'react-native';
 
 import {
@@ -64,6 +65,9 @@ class Map extends React.Component {
     speechRate: 0.5,
     speechPitch: 1,
     text: "hey apo how are you",
+    buttonMarkerTest: "",
+    buttonTitles: ['Pothole', 'Accident', 'Speed Trap', 'Road Damage', 'Nice View', 'Road Closed', 'Nice View', 'Clean Bathrooms', 'Freshly Paved Road', 'Custom'],
+    buttonClicked: false,
   };
 
   constructor(props) {
@@ -153,6 +157,21 @@ class Map extends React.Component {
     }
 
 
+    console.log(this.state.buttonMarkerTest)
+    if (this.state.buttonClicked) {
+      const buttonTextMarker = {title: this.state.buttonMarkerTest, latitude, longitude}
+      api.makeMarker(buttonTextMarker)
+
+        console.log("bum")
+        this.setState({
+          buttonMarkerTest: "",
+          buttonClicked: false
+        })
+        console.log(this.state.buttonMarkerTest)
+
+    }
+
+
     if (this.state.markers.length > 0) {
       for (let marker of this.state.markers) {
         const closeEnough = haversine(
@@ -184,13 +203,6 @@ class Map extends React.Component {
           }
         })
       } else {
-        // console.log("reference position" + this.state.lastReferencePosition.latitude + this.state.lastReferencePosition.longitude)
-        // console.log("current location: " + latitude + longitude )
-        // console.log("distance: " + haversine({ latitude, longitude },
-        //   { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
-        //   {
-        //     unit: 'mile',
-        //   }))
         
           //for some reason, this particular haversine threshold didn't work, and had to be done manually, I have literally no idea why
         let quarterMilePassed = .25 < haversine({ latitude, longitude },
@@ -314,6 +326,31 @@ class Map extends React.Component {
     );
   };
 
+  buttonPressHandler(index) {
+
+    let newState = {...this.state}  
+
+    // console.log(newState)
+
+    let button = newState.buttonTitles.find((element, i) => {
+      return index === i;
+    })
+
+    this.props.toggleModal()
+
+    if (button === "Custom") {
+      this.setState({buttonClicked: true})
+    } else {
+      this.setState({buttonMarkerTest: button, buttonClicked: true})
+    }
+
+
+
+
+
+
+  }
+
   render() {
 
 
@@ -335,8 +372,6 @@ class Map extends React.Component {
           /> */}
         </Marker>
       ));
-    } else {
-
     }
 
     return (
@@ -364,19 +399,15 @@ class Map extends React.Component {
           <View style={{ marginTop: 22 }}>
             <View>
 
-              <Button title = 'Pothole'/>
-              <Button title = 'Accident'/>
-              <Button title = 'Speed Trap'/>
-              <Button title = 'Road Damage'/>
-              <Button title = 'Road Closed'/>
+              {this.state.buttonTitles.map((buttonTitle, index) => <Button key={index} onPress={(event) => this.buttonPressHandler(index)} title={buttonTitle}/>)}
 
-              <Button title = 'Nice View'/>
-              <Button title = 'Clean Bathrooms'/>
-              <Button title = 'Freshly Paved Road'/>
+
+              <TextInput value={this.state.buttonMarkerTest} onChangeText={(text) => this.setState({buttonMarkerTest: text})} />
+
 
               <TouchableHighlight
                 onPress={
-              (this.props.toggleModal)
+              this.props.toggleModal
                 }>
                 <Text>Hide Modal</Text>
               </TouchableHighlight>
