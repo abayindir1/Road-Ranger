@@ -17,10 +17,22 @@ import api from '../../utils/api';
 
 class Home extends Component {
 
-
-  static navigationOptions = {
-    title: 'Home',
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'RЯ',
+      headerRight: () => (
+        <Button
+          onPress={navigation.getParam('increaseCount')}
+          title="+1"
+          color="#fff"
+        />
+      ),
+    };
   };
+
+  // static navigationOptions = {
+  //   title: 'RЯ'
+  // };
 
 
   state = {
@@ -184,29 +196,43 @@ class Home extends Component {
         </TouchableOpacity>
         <Modal
           animationType="slide"
-          transparent={false}
+          transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
           }}>
-          <View style={{ marginTop: 22 }}>
+          <View style={styles.modal}>
             <View>
 
-              <Button onPress={() => api.create} title = 'Pothole'/>
-              <Button title = 'Accident'/>
-              <Button title = 'Speed Trap'/>
-              <Button title = 'Road Damage'/>
-              <Button title = 'Road Closed'/>
+              <TouchableHighlight >
+                <Text style={styles.markerButtons}>Pothole</Text>
+              </TouchableHighlight>
+              <TouchableHighlight>
+                <Text style={styles.markerButtons}>Accident</Text>
+              </TouchableHighlight>
+              <TouchableHighlight>
+                <Text style={styles.markerButtons}>Speed Trap</Text>
+              </TouchableHighlight>
+              <TouchableHighlight>
+                <Text style={styles.markerButtons}>Road Damage</Text>
+              </TouchableHighlight>
+              <TouchableHighlight>
+                <Text style={styles.markerButtons}>Road Closed</Text>
+              </TouchableHighlight>
 
-              <Button title = 'Nice View'/>
-              <Button title = 'Clean Bathrooms'/>
-              <Button title = 'Freshly Paved Road'/>
+              <TouchableHighlight>
+                <Text style={styles.markerButtons2}>Nice View</Text>
+              </TouchableHighlight><TouchableHighlight>
+                <Text style={styles.markerButtons2}>Clean Bathrooms</Text>
+              </TouchableHighlight><TouchableHighlight>
+                <Text style={styles.markerButtons2}>Freshly Paved Road</Text>
+              </TouchableHighlight>
 
               <TouchableHighlight
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);
                 }}>
-                <Text>Hide Modal</Text>
+                <Text style= {styles.hideModalButton}>Go Back To Map</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -220,6 +246,45 @@ class Home extends Component {
 }
 
 const styles = StyleSheet.create({
+  modal:{
+    backgroundColor: '#00000082',
+    padding: 30,
+    height: 800,
+    alignContent: "center",
+  },
+  markerButtons:{
+    color:'#bebcbc',
+    backgroundColor: "black",
+    width: "70%",
+    fontSize: 20,
+    padding: 8,
+    textAlign: 'center',
+    borderRadius: 40,
+    margin: 10,
+    marginLeft: 50
+  },
+  markerButtons2:{
+    color:'black',
+    backgroundColor: "#bebcbc",
+    width: "70%",
+    fontSize: 20,
+    padding: 8,
+    textAlign: 'center',
+    borderRadius: 40,
+    margin: 10,
+    marginLeft: 50
+  },
+  hideModalButton:{
+    color:'black',
+    backgroundColor: "turquoise",
+    width: "70%",
+    fontSize: 20,
+    padding: 8,
+    textAlign: 'center',
+    borderRadius: 40,
+    margin: 10,
+    marginLeft: 50
+  },
   mainMap: {
     height: '100%',
     zIndex: -1
