@@ -14,6 +14,7 @@ import TextTest from '../components/TextToVoice'
 // import MaterialMapView from "../components/MaterialMapView";
 import TalkButton from "../components/TalkButton";
 import api from '../../utils/api';
+import MapIcon from "react-native-vector-icons/FontAwesome"
 
 class Home extends Component {
 
@@ -21,11 +22,12 @@ class Home extends Component {
     return {
       title: 'RЯ',
       headerRight: () => (
-        <Button
-          onPress={navigation.getParam('increaseCount')}
-          title="+1"
-          color="#fff"
-        />
+        <MapIcon name="exclamation-triangle" style={styles.icon4} />
+        // <Button
+        //   onPress={navigation.getParam('increaseCount')}
+        //   title="+1"
+        //   color="#fff"
+        // />
       ),
     };
   };
@@ -193,7 +195,8 @@ class Home extends Component {
     return (
       <View style={styles.container}>
         <Maps toggleModal = {() => this.setModalVisible(false)} isVisible={this.state.modalVisible} toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
-        <TouchableOpacity style={styles.button} onPress={() => { this.setModalVisible(true)}} onLongPress={this._startRecognizing}>
+
+        <TouchableOpacity style={styles.button} onPress={() => { this.setModalVisible(true)}} onLongPress={this._startRecognizing} >
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
 
@@ -389,6 +392,9 @@ const styles = StyleSheet.create({
     width: 376,
     height: 812,
     marginLeft: -1
+  },
+  icon4:{
+    color:"#fff"
   }
 });
 

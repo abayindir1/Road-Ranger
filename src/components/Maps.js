@@ -391,25 +391,28 @@ class Map extends React.Component {
         </MapView>
         <Modal
           animationType="slide"
-          transparent={false}
+          transparent={true}
           visible={this.props.isVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
+            // Alert.alert('Modal has been closed.');
           }}>
-          <View style={{ marginTop: 22 }}>
+          <View style={styles.modal}>
             <View>
 
-              {this.state.buttonTitles.map((buttonTitle, index) => <Button key={index} onPress={(event) => this.buttonPressHandler(index)} title={buttonTitle}/>)}
+              {this.state.buttonTitles.map((buttonTitle, index) =>
+               <TouchableHighlight key={index} onPress={(event) => this.buttonPressHandler(index)} title={buttonTitle}>
+                <Text style={styles.markerButtons}>{buttonTitle}</Text>
+              </TouchableHighlight>)}
 
 
-              <TextInput value={this.state.buttonMarkerTest} onChangeText={(text) => this.setState({buttonMarkerTest: text})} />
+              <TextInput style={styles.inputBox} value={this.state.buttonMarkerTest} onChangeText={(text) => this.setState({buttonMarkerTest: text})} />
 
 
               <TouchableHighlight
                 onPress={
               this.props.toggleModal
                 }>
-                <Text>Hide Modal</Text>
+                <Text style={styles.hideModalButton}>Hide Modal</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -430,21 +433,10 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     width: "70%",
     fontSize: 20,
-    padding: 8,
+    padding: 5,
     textAlign: 'center',
     borderRadius: 40,
-    margin: 10,
-    marginLeft: 50
-  },
-  markerButtons2:{
-    color:'black',
-    backgroundColor: "#bebcbc",
-    width: "70%",
-    fontSize: 20,
-    padding: 8,
-    textAlign: 'center',
-    borderRadius: 40,
-    margin: 10,
+    margin: 8,
     marginLeft: 50
   },
   hideModalButton:{
@@ -455,9 +447,13 @@ const styles = StyleSheet.create({
     padding: 8,
     textAlign: 'center',
     borderRadius: 40,
-    margin: 10,
+    margin: 5,
     marginLeft: 50
   },
+  inputBox:{
+    borderBottomColor:"black",
+    backgroundColor: "white"
+  }
 });
 export default Map;
 
