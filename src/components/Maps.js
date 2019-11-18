@@ -396,6 +396,8 @@ class Map extends React.Component {
           onRequestClose={() => {
             // Alert.alert('Modal has been closed.');
           }}>
+            <ScrollView>
+
           <View style={styles.modal}>
             <View>
 
@@ -416,6 +418,7 @@ class Map extends React.Component {
               </TouchableHighlight>
             </View>
           </View>
+            </ScrollView>
         </Modal>
       </>
     );
@@ -429,8 +432,8 @@ const styles = StyleSheet.create({
     alignContent: "center",
   },
   markerButtons:{
-    color:'#bebcbc',
-    backgroundColor: "black",
+    color:'white',
+    backgroundColor: "#47648b",
     width: "70%",
     fontSize: 20,
     padding: 5,
@@ -451,8 +454,10 @@ const styles = StyleSheet.create({
     marginLeft: 50
   },
   inputBox:{
+    
     borderBottomColor:"black",
     backgroundColor: "white"
+
   }
 });
 export default Map;
