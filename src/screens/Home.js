@@ -79,6 +79,8 @@ class Home extends Component {
     //     Tts.getInitStatus().then(this.initTts);
   }
 
+
+
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
@@ -190,53 +192,11 @@ class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Maps toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
+        <Maps toggleModal = {() => this.setModalVisible(false)} isVisible={this.state.modalVisible} toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
         <TouchableOpacity style={styles.button} onPress={() => { this.setModalVisible(true)}} onLongPress={this._startRecognizing}>
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          <View style={styles.modal}>
-            <View>
 
-              <TouchableHighlight >
-                <Text style={styles.markerButtons}>Pothole</Text>
-              </TouchableHighlight>
-              <TouchableHighlight>
-                <Text style={styles.markerButtons}>Accident</Text>
-              </TouchableHighlight>
-              <TouchableHighlight>
-                <Text style={styles.markerButtons}>Speed Trap</Text>
-              </TouchableHighlight>
-              <TouchableHighlight>
-                <Text style={styles.markerButtons}>Road Damage</Text>
-              </TouchableHighlight>
-              <TouchableHighlight>
-                <Text style={styles.markerButtons}>Road Closed</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight>
-                <Text style={styles.markerButtons2}>Nice View</Text>
-              </TouchableHighlight><TouchableHighlight>
-                <Text style={styles.markerButtons2}>Clean Bathrooms</Text>
-              </TouchableHighlight><TouchableHighlight>
-                <Text style={styles.markerButtons2}>Freshly Paved Road</Text>
-              </TouchableHighlight>
-
-              <TouchableHighlight
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text style= {styles.hideModalButton}>Go Back To Map</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
 
 
       </View>
