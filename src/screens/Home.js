@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Alert, TouchableOpacity, Modal, TouchableHighlight, Text, Button } from "react-native";
+import { StyleSheet, View, Alert, TouchableOpacity, Modal, TouchableHighlight, Text, Button, StatusBar, Image } from "react-native";
 import Voice from 'react-native-voice';
 
 import { PermissionsAndroid } from 'react-native';
@@ -16,26 +16,35 @@ import TalkButton from "../components/TalkButton";
 import api from '../../utils/api';
 import MapIcon from "react-native-vector-icons/FontAwesome"
 
+const HeaderWithImage = () => (
+  <>
+    <StatusBar barStyle="light-content" />
+    <View style={{height: 64, width: '100%'}}>
+      <Image
+        style={{height: 64, width: '100%'}}
+        source={require('../assets/images/mapBackGround.png')}
+      />
+      <View
+        style={[
+          {alignItems: 'center', justifyContent: 'center'},
+          StyleSheet.absoluteFill,
+        ]}>
+        <Image
+          style={{position: 'absolute', width: 45, height: 45}}
+          source={require('../assets/images/13b8cbed-e1a4-4e8f-b96f-a47346ba2208_200x200.png')}
+        />
+      </View>
+    </View>
+  </>
+);
+
 class Home extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'RЯ',
-      headerRight: () => (
-        <MapIcon name="exclamation-triangle" style={styles.icon4} />
-        // <Button
-        //   onPress={navigation.getParam('increaseCount')}
-        //   title="+1"
-        //   color="#fff"
-        // />
-      ),
+      headerTitle: () => <HeaderWithImage />
     };
   };
-
-  // static navigationOptions = {
-  //   title: 'RЯ'
-  // };
-
 
   state = {
     recognized: '',
