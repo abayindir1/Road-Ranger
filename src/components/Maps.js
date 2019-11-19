@@ -66,7 +66,7 @@ class Map extends React.Component {
     speechPitch: 1,
     text: "hey apo how are you",
     buttonMarkerTest: "",
-    buttonTitles: ['Pothole', 'Accident', 'Speed Trap', 'Road Damage', 'Nice View', 'Road Closed', 'Nice View', 'Clean Bathrooms', 'Freshly Paved Road', 'Custom'],
+    buttonTitles: ['Pothole', 'Accident', 'Speed Trap', 'Road Damage', 'Road Closed', 'Nice View', 'Clean Bathrooms', 'Freshly Paved Road', 'Add Custom Marker '],
     buttonClicked: false,
   };
 
@@ -414,7 +414,7 @@ class Map extends React.Component {
               </TouchableHighlight>)}
 
 
-              <TextInput style={styles.inputBox} value={this.state.buttonMarkerTest} onChangeText={(text) => this.setState({buttonMarkerTest: text})} />
+              <TextInput style={styles.inputBox} placeholder="Enter a custom message"  placeholderTextColor="black" value={this.state.buttonMarkerTest} onChangeText={(text) => this.setState({buttonMarkerTest: text})} />
 
 
               <TouchableHighlight
@@ -440,31 +440,39 @@ const styles = StyleSheet.create({
   },
   markerButtons:{
     color:'white',
-    backgroundColor: "#47648b",
+    backgroundColor: "#233f66d4",
     width: "70%",
     fontSize: 20,
     padding: 5,
     textAlign: 'center',
     borderRadius: 40,
     margin: 8,
-    marginLeft: 50
+    marginLeft: 50,
+    borderBottomWidth: 8,
+    borderLeftWidth:4,
+    borderRightWidth:4,
+    borderColor: '#000000de'
   },
   hideModalButton:{
-    color:'black',
-    backgroundColor: "turquoise",
+    color:'white',
+    backgroundColor: "#233f66d4",
     width: "70%",
     fontSize: 20,
-    padding: 8,
+    padding: 5,
     textAlign: 'center',
     borderRadius: 40,
-    margin: 5,
-    marginLeft: 50
+    margin: 8,
+    marginLeft: 50,
+    borderBottomWidth: 8,
+    borderLeftWidth:4,
+    borderRightWidth:4,
+    borderColor: '#000000de'
   },
   inputBox:{
-    
     borderBottomColor:"black",
-    backgroundColor: "white"
-
+    backgroundColor: "white",
+    borderRadius:10
+    
   }
 });
 export default Map;
