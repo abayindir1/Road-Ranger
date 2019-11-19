@@ -142,6 +142,13 @@ class Map extends React.Component {
     // console.log(coordinates);
     const { latitude, longitude } = coordinates;
 
+    this.setState({currentPosition: {
+      latitude: latitude,
+      longitude: longitude,
+      latitudeDelta: .2,
+      longitudeDelta: .2,
+    }})
+
 
     if (this.props.hasSpeechRecorded) {
       console.log('Make call to send coordinates');
@@ -291,7 +298,7 @@ class Map extends React.Component {
   };
 
   readText = async (title) => {
-    Tts.stop();
+    // Tts.stop();
     Tts.speak(title);
   };
 
@@ -343,13 +350,9 @@ class Map extends React.Component {
     } else {
       this.setState({buttonMarkerTest: button, buttonClicked: true})
     }
-
-
-
-
-
-
   }
+
+  
 
   render() {
 
@@ -377,7 +380,11 @@ class Map extends React.Component {
     return (
       <>
         <MapView
+          // onDoublePress={(data) =>console.log(data)}
+          onRegionChange = {(data) => console.log(data)}
           showsUserLocation
+          zoomEnabled={false}
+          scrollEnabled={false}
           //get intial user region
           region={{
             ...this.state.currentPosition,
