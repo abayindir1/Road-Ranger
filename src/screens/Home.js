@@ -20,15 +20,21 @@ class Home extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
+
       title: 'RЯ',
-      headerRight: () => (
-        <MapIcon name="exclamation-triangle" style={styles.icon4} />
-        // <Button
-        //   onPress={navigation.getParam('increaseCount')}
-        //   title="+1"
-        //   color="#fff"
-        // />
-      ),
+      headerTitleStyle: { 
+        textAlign:"center", 
+        flex:1,
+        fontSize: 50,
+    },
+      // headerRight: () => (
+      //   <MapIcon name="exclamation-triangle" style={styles.icon4} />
+      //   // <Button
+      //   //   onPress={navigation.getParam('increaseCount')}
+      //   //   title="+1"
+      //   //   color="#fff"
+      //   // />
+      // ),
     };
   };
 
