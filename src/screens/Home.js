@@ -42,7 +42,9 @@ class Home extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
+
       headerTitle: () => <HeaderWithImage />
+
     };
   };
 
