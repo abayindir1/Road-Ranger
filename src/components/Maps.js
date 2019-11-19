@@ -66,7 +66,7 @@ class Map extends React.Component {
     speechPitch: 1,
     text: "hey apo how are you",
     buttonMarkerTest: "",
-    buttonTitles: ['Pothole', 'Accident', 'Speed Trap', 'Road Damage', 'Road Closed', 'Nice View', 'Clean Bathrooms', 'Freshly Paved Road', 'Add Custom Marker '],
+    buttonTitles: ['Pothole', 'Accident', 'Speed Trap', 'Road Damage', 'Road Closed', 'Nice View', 'Clean Bathrooms', 'Freshly Paved Road', 'Add Custom Marker'],
     buttonClicked: false,
   };
 
@@ -345,7 +345,7 @@ class Map extends React.Component {
 
     this.props.toggleModal()
 
-    if (button === "Custom") {
+    if (button === "Add Custom Marker") {
       this.setState({buttonClicked: true})
     } else {
       this.setState({buttonMarkerTest: button, buttonClicked: true})
@@ -421,7 +421,7 @@ class Map extends React.Component {
                 onPress={
               this.props.toggleModal
                 }>
-                <Text style={styles.hideModalButton}>Hide Modal</Text>
+                <Text style={styles.hideModalButton}>Go Back To Map</Text>
               </TouchableHighlight>
             </View>
           </View>
