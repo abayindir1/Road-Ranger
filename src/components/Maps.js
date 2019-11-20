@@ -68,6 +68,8 @@ class Map extends React.Component {
     buttonMarkerTest: "",
     buttonTitles: ['Pothole', 'Accident', 'Speed Trap', 'Road Damage', 'Road Closed', 'Nice View', 'Clean Bathrooms', 'Freshly Paved Road', 'Add Custom Marker'],
     buttonClicked: false,
+    currentLatitude: "",
+    currentLongitude: ""
   };
 
   constructor(props) {
@@ -94,6 +96,7 @@ class Map extends React.Component {
         //find all markers with mentioned equal to true, and check them against the newly imported markers
         //only one marker for every mile distance
         //get markers every mile
+        console.log("didmount")
         for (let marker of results.data) {
           marker.mentioned = false;
         }
@@ -142,39 +145,29 @@ class Map extends React.Component {
     // console.log(coordinates);
     const { latitude, longitude } = coordinates;
 
-    this.setState({currentPosition: {
-      latitude: latitude,
-      longitude: longitude,
-      latitudeDelta: .2,
-      longitudeDelta: .2,
-    }})
+
+    this.setState({
+      currentPosition: {
+        latitude: latitude,
+        longitude: longitude,
+        latitudeDelta: .2,
+        longitudeDelta: .2,
+      }
+    })
 
 
     if (this.props.hasSpeechRecorded) {
       console.log('Make call to send coordinates');
       console.log('in the .then, this.setState({ markers: this.state.markers.concat({ your marker object }) })')
       console.log({ markers: this.state.markers, coordinates, speechRecognitionResults: this.props.speechRecognitionResults[0] })
+      this.props.toggleHasSpeechRecorded(false);
+
       api.makeMarker({
         latitude,
         longitude,
         title: this.props.speechRecognitionResults[0]
       })
-//concat to state and then reset
-      this.props.toggleHasSpeechRecorded(false);
-    }
-
-
-    console.log(this.state.buttonMarkerTest)
-    if (this.state.buttonClicked) {
-      const buttonTextMarker = {title: this.state.buttonMarkerTest, latitude, longitude}
-      api.makeMarker(buttonTextMarker)
-
-        console.log("bum")
-        this.setState({
-          buttonMarkerTest: "",
-          buttonClicked: false
-        })
-        console.log(this.state.buttonMarkerTest)
+      //concat to state and then reset
 
     }
 
@@ -185,7 +178,7 @@ class Map extends React.Component {
           { latitude, longitude },
           { latitude: marker.latitude, longitude: marker.longitude },
           {
-            threshold: .25,
+            threshold: .5,
             unit: 'mile',
           },
         )
@@ -210,48 +203,33 @@ class Map extends React.Component {
           }
         })
       } else {
-        
-          //for some reason, this particular haversine threshold didn't work, and had to be done manually, I have literally no idea why
-        let quarterMilePassed = .25 < haversine({ latitude, longitude },
+
+        //for some reason, this particular haversine threshold didn't work, and had to be done manually, I have literally no idea why
+        console.log(haversine({ latitude, longitude },
+          { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
+          {
+            unit: 'mile',
+          }))
+          console.log(this.state.lastReferencePosition)
+        let quarterMilePassed = .5 < haversine({ latitude, longitude },
           { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
           {
             unit: 'mile',
           })
-
-        // console.log(quarterMilePassed)
         if (quarterMilePassed) {
-          api.getAllMarkers()
-          .then(newMarkers => {
 
-            for (let newMarker of newMarkers.data) {
-              haversine(
-                { latitude, longitude },
-                { latitude: newMarker.latitude, longitude: newMarker.longitude },
-                {
-                  threshold: .25,
-                  unit: 'mile',
-                },
-              ) ? newMarker.mentioned = true : newMarker.mentioned = false;
+          this.setState({
+            lastReferencePosition: {
+              latitude,
+              longitude
+            }})
 
-            }
+            this.getMapMarkers()
 
-            this.setState({
-              markers: newMarkers.data,
-              lastReferencePosition: {
-                latitude,
-                longitude
-              },
-  
-  
-            })
 
-            // console.log(this.state.markers)
-
-          })
-          .catch(err => console.error(err))
-
-        }
+        
       }
+    }
 
 
       // console.log(closeEnoughArr)
@@ -279,9 +257,9 @@ class Map extends React.Component {
 
 
       for (let voice of voices) {
-        if(voice.name === "en-us-x-sfg-local"){
+        if (voice.name === "en-us-x-sfg-local") {
 
-          console.log("---------------",voice)
+          console.log("---------------", voice)
           console.log(voices.indexOf(voice))
         }
       }
@@ -335,7 +313,7 @@ class Map extends React.Component {
 
   buttonPressHandler(index) {
 
-    let newState = {...this.state}  
+    let newState = { ...this.state }
 
     // console.log(newState)
 
@@ -346,13 +324,55 @@ class Map extends React.Component {
     this.props.toggleModal()
 
     if (button === "Add Custom Marker") {
-      this.setState({buttonClicked: true})
-    } else {
-      this.setState({buttonMarkerTest: button, buttonClicked: true})
+      button = this.state.buttonMarkerTest
+      console.log(button)
+      // this.setState({ buttonClicked: true })
     }
+
+
+      const buttonTextMarker = { title: button, latitude: newState.currentPosition.latitude, longitude: newState.currentPosition.longitude }
+
+        console.log("a marker was made here at this location. The marker was called" + button)
+        api.makeMarker(buttonTextMarker)
+          .then(results => {
+            this.setState({
+              buttonMarkerTest: "",
+            })
+            console.log("a marker was made")
+            console.log("make marker api call result" + results)
+            console.log("ther current button marker text is" + this.state.buttonMarkerTest)
+          })
+          .catch(err => console.log(err))
+    
   }
 
-  
+  getMapMarkers = async () => {
+    await api.getAllMarkers()
+    .then(newMarkers => {
+      console.log("the number of markers in the database is..." + newMarkers.data.length)
+      for (let newMarker of newMarkers.data) {
+        haversine(
+          { latitude: this.state.currentPosition.latitude, longitude: this.state.currentPosition.latitude },
+          { latitude: newMarker.latitude, longitude: newMarker.longitude },
+          {
+            threshold: .5,
+            unit: 'mile',
+          },
+        ) ? newMarker.mentioned = true : newMarker.mentioned = false;
+
+      }
+
+      this.setState({
+        markers: newMarkers.data,
+      })
+
+      // console.log(this.state.markers)
+
+    })
+    .catch(err => console.error(err))
+  }
+
+
 
   render() {
 
@@ -381,7 +401,7 @@ class Map extends React.Component {
       <>
         <MapView
           // onDoublePress={(data) =>console.log(data)}
-          onRegionChange = {(data) => console.log(data)}
+          onRegionChange={(data) => console.log(data)}
           showsUserLocation
           zoomEnabled={false}
           scrollEnabled={false}
@@ -403,43 +423,43 @@ class Map extends React.Component {
           onRequestClose={() => {
             // Alert.alert('Modal has been closed.');
           }}>
-            <ScrollView>
+          <ScrollView>
 
-          <View style={styles.modal}>
-            <View>
+            <View style={styles.modal}>
+              <View>
 
-              {this.state.buttonTitles.map((buttonTitle, index) =>
-               <TouchableHighlight key={index} onPress={(event) => this.buttonPressHandler(index)} title={buttonTitle}>
-                <Text style={styles.markerButtons}>{buttonTitle}</Text>
-              </TouchableHighlight>)}
-
-
-              <TextInput style={styles.inputBox} placeholder="Enter a custom message"  placeholderTextColor="black" value={this.state.buttonMarkerTest} onChangeText={(text) => this.setState({buttonMarkerTest: text})} />
+                {this.state.buttonTitles.map((buttonTitle, index) =>
+                  <TouchableHighlight key={index} onPress={(event) => this.buttonPressHandler(index)} title={buttonTitle}>
+                    <Text style={styles.markerButtons}>{buttonTitle}</Text>
+                  </TouchableHighlight>)}
 
 
-              <TouchableHighlight
-                onPress={
-              this.props.toggleModal
-                }>
-                <Text style={styles.hideModalButton}>Go Back To Map</Text>
-              </TouchableHighlight>
+                <TextInput style={styles.inputBox} placeholder="Enter a custom message" placeholderTextColor="black" value={this.state.buttonMarkerTest} onChangeText={(text) => this.setState({ buttonMarkerTest: text })} />
+
+
+                <TouchableHighlight
+                  onPress={
+                    this.props.toggleModal
+                  }>
+                  <Text style={styles.hideModalButton}>Go Back To Map</Text>
+                </TouchableHighlight>
+              </View>
             </View>
-          </View>
-            </ScrollView>
+          </ScrollView>
         </Modal>
       </>
     );
   }
 }
 const styles = StyleSheet.create({
-  modal:{
+  modal: {
     backgroundColor: '#00000082',
     padding: 30,
     height: 800,
     alignContent: "center",
   },
-  markerButtons:{
-    color:'white',
+  markerButtons: {
+    color: 'white',
     backgroundColor: "#233f66d4",
     width: "70%",
     fontSize: 20,
@@ -449,12 +469,12 @@ const styles = StyleSheet.create({
     margin: 8,
     marginLeft: 50,
     borderBottomWidth: 8,
-    borderLeftWidth:4,
-    borderRightWidth:4,
+    borderLeftWidth: 4,
+    borderRightWidth: 4,
     borderColor: '#000000de'
   },
-  hideModalButton:{
-    color:'white',
+  hideModalButton: {
+    color: 'white',
     backgroundColor: "#233f66d4",
     width: "70%",
     fontSize: 20,
@@ -464,15 +484,15 @@ const styles = StyleSheet.create({
     margin: 8,
     marginLeft: 50,
     borderBottomWidth: 8,
-    borderLeftWidth:4,
-    borderRightWidth:4,
+    borderLeftWidth: 4,
+    borderRightWidth: 4,
     borderColor: '#000000de'
   },
-  inputBox:{
-    borderBottomColor:"black",
+  inputBox: {
+    borderBottomColor: "black",
     backgroundColor: "white",
-    borderRadius:10
-    
+    borderRadius: 10
+
   }
 });
 export default Map;
