@@ -347,12 +347,12 @@ class Map extends React.Component {
   }
 
   getMapMarkers = async () => {
-    await api.getAllMarkers()
+    api.getAllMarkers()
     .then(newMarkers => {
       console.log("the number of markers in the database is..." + newMarkers.data.length)
       for (let newMarker of newMarkers.data) {
         haversine(
-          { latitude: this.state.currentPosition.latitude, longitude: this.state.currentPosition.latitude },
+          { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
           { latitude: newMarker.latitude, longitude: newMarker.longitude },
           {
             threshold: .5,
