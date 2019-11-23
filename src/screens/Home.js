@@ -58,13 +58,6 @@ class Home extends Component {
     partialResults: [],
     hasSpeechRecorded: false,
     modalVisible: false,
-    // ---------------------------------
-    // voices: [],
-    //     ttsStatus: "initiliazing",
-    //     selectedVoice: null,
-    //     speechRate: 0.5,
-    //     speechPitch: 1,
-    //     text: "hey apo how are you",
   };
 
   constructor(props) {
@@ -78,22 +71,10 @@ class Home extends Component {
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
     this.requestAudioPermission()
     // ---------------------------------------------------------
-    // Tts.addEventListener("tts-start", event =>
-    //       this.setState({ ttsStatus: "started" })
-    //     );
-    //     Tts.addEventListener("tts-finish", event =>
-    //       this.setState({ ttsStatus: "finished" })
-    //     );
-    //     Tts.addEventListener("tts-cancel", event =>
-    //       this.setState({ ttsStatus: "cancelled" })
-    //     );
-    //     Tts.setDefaultRate(this.state.speechRate);
-    //     Tts.setDefaultPitch(this.state.speechPitch);
-    //     Tts.getInitStatus().then(this.initTts);
   }
 
 
-
+//By tapping the central button, a modal will be displayed. This modal will display all the button options.
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
@@ -120,7 +101,7 @@ class Home extends Component {
       console.warn(err);
     }
   }
-
+//logic for voice to text functionality
   componentWillUnmount() {
     Voice.destroy().then(Voice.removeAllListeners);
   }
@@ -201,7 +182,7 @@ class Home extends Component {
 
 
 
-
+//the main touchable opacity button will activte voice to text on a long press, and the quick-select buttons modal on a short press.
   render() {
     return (
       <View style={styles.container}>

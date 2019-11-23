@@ -92,10 +92,6 @@ class Map extends React.Component {
     api
       .getAllMarkers()
       .then(results => {
-        // console.log(results);
-        //find all markers with mentioned equal to true, and check them against the newly imported markers
-        //only one marker for every mile distance
-        //get markers every mile
         console.log("didmount")
         for (let marker of results.data) {
           marker.mentioned = false;
@@ -106,11 +102,6 @@ class Map extends React.Component {
         // console.log(this.state.markers)
       })
       .catch(err => console.log(err));
-
-    // api
-    //   .makeMarker(anotherMarker)
-    //   .then(newMarker => console.log(newMarker))
-    //   .catch(err => console.log(err));
   }
 
 
@@ -142,7 +133,7 @@ class Map extends React.Component {
   //fired just about every second when the user location changes
 
   onUserLocationChange(coordinates) {
-    // console.log(coordinates);
+    //gets the current user coordinates
     const { latitude, longitude } = coordinates;
 
 
@@ -171,7 +162,7 @@ class Map extends React.Component {
 
     }
 
-
+    //Haversine is a library that calculates distance in the specified unit of measurement between two pairs of latitude/longitude coordinates. Adding a threshold means that the function will return, for each marker, true if that marker is within half a mile of distance, and false if it is not.
     if (this.state.markers.length > 0) {
       for (let marker of this.state.markers) {
         const closeEnough = haversine(
@@ -182,20 +173,14 @@ class Map extends React.Component {
             unit: 'mile',
           },
         )
-
-        // console.log({[marker.title]: closeEnough})
-
+        //if the marker is within half a mile, the text to voice software reads it out, and then gives the marker a property stating that it has already been mentioned. This guards against repeating the marker multiple times.
         if (closeEnough && marker.mentioned === false) {
           this.readText(marker.title)
-          // console.log(marker.title)
-          // console.log("what's going on?")
           marker.mentioned = true
         }
-
+        //if there is no last reference position, the current position is set to be the last reference position.
       }
-      // console.log(this.state.lastReferencePosition.latitude)
       if (!this.state.lastReferencePosition.latitude) {
-        // console.log("setting reference")
         this.setState({
           lastReferencePosition: {
             latitude,
@@ -204,35 +189,29 @@ class Map extends React.Component {
         })
       } else {
 
-        //for some reason, this particular haversine threshold didn't work, and had to be done manually, I have literally no idea why
-        console.log(haversine({ latitude, longitude },
-          { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
-          {
-            unit: 'mile',
-          }))
-          console.log(this.state.lastReferencePosition)
-        let quarterMilePassed = .5 < haversine({ latitude, longitude },
+        // This particular haversine threshold didn't work, and had to be done manually
+        console.log(this.state.lastReferencePosition)
+        let halfMilePassed = .5 < haversine({ latitude, longitude },
           { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
           {
             unit: 'mile',
           })
-        if (quarterMilePassed) {
-
+        if (halfMilePassed) {
+          //If half a mile has passed between the users current position and the last, then set the current position to the last reference position, and get each map marker from the database
           this.setState({
             lastReferencePosition: {
               latitude,
               longitude
-            }})
+            }
+          })
 
-            this.getMapMarkers()
+          this.getMapMarkers()
 
 
-        
+
+        }
       }
-    }
 
-
-      // console.log(closeEnoughArr)
     }
   }
 
@@ -310,12 +289,10 @@ class Map extends React.Component {
       />
     );
   };
-
+  //this handles any press on the quick-select buttons that show up on the modal
   buttonPressHandler(index) {
 
     let newState = { ...this.state }
-
-    // console.log(newState)
 
     let button = newState.buttonTitles.find((element, i) => {
       return index === i;
@@ -326,50 +303,47 @@ class Map extends React.Component {
     if (button === "Add Custom Marker") {
       button = this.state.buttonMarkerTest
       console.log(button)
-      // this.setState({ buttonClicked: true })
     }
 
 
-      const buttonTextMarker = { title: button, latitude: newState.currentPosition.latitude, longitude: newState.currentPosition.longitude }
+    const buttonTextMarker = { title: button, latitude: newState.currentPosition.latitude, longitude: newState.currentPosition.longitude }
 
-        console.log("a marker was made here at this location. The marker was called" + button)
-        api.makeMarker(buttonTextMarker)
-          .then(results => {
-            this.setState({
-              buttonMarkerTest: "",
-            })
-            console.log("a marker was made")
-            console.log("make marker api call result" + results)
-            console.log("ther current button marker text is" + this.state.buttonMarkerTest)
-          })
-          .catch(err => console.log(err))
-    
+    console.log("a marker was made here at this location. The marker was called" + button)
+    api.makeMarker(buttonTextMarker)
+      .then(results => {
+        this.setState({
+          buttonMarkerTest: "",
+        })
+        console.log("a marker was made")
+        console.log("make marker api call result" + results)
+        console.log("ther current button marker text is" + this.state.buttonMarkerTest)
+      })
+      .catch(err => console.log(err))
+
   }
-
+  //this gets all markers from the database, and is called every half mile, judged by distance of current location from the last reference position.This function can have difficulty if too many markers are placed in a short period of time. This will likely not be a problem, as users will be limited to 3 markers every couple of hours to prevent spam.
   getMapMarkers = async () => {
     api.getAllMarkers()
-    .then(newMarkers => {
-      console.log("the number of markers in the database is..." + newMarkers.data.length)
-      for (let newMarker of newMarkers.data) {
-        haversine(
-          { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
-          { latitude: newMarker.latitude, longitude: newMarker.longitude },
-          {
-            threshold: .5,
-            unit: 'mile',
-          },
-        ) ? newMarker.mentioned = true : newMarker.mentioned = false;
+      .then(newMarkers => {
+        console.log("the number of markers in the database is..." + newMarkers.data.length)
+        for (let newMarker of newMarkers.data) {
+          haversine(
+            { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
+            { latitude: newMarker.latitude, longitude: newMarker.longitude },
+            {
+              threshold: .5,
+              unit: 'mile',
+            },
+          ) ? newMarker.mentioned = true : newMarker.mentioned = false;
+//if a marker is within half a mile when drawn from the database, it enters as mentioned, as it will have been read off already, or just been created, and so should not be mentioned another time.
+        }
 
-      }
+        this.setState({
+          markers: newMarkers.data,
+        })
 
-      this.setState({
-        markers: newMarkers.data,
       })
-
-      // console.log(this.state.markers)
-
-    })
-    .catch(err => console.error(err))
+      .catch(err => console.error(err))
   }
 
 
@@ -400,7 +374,6 @@ class Map extends React.Component {
     return (
       <>
         <MapView
-          // onDoublePress={(data) =>console.log(data)}
           onRegionChange={(data) => console.log(data)}
           showsUserLocation
           zoomEnabled={false}
@@ -412,7 +385,6 @@ class Map extends React.Component {
           onUserLocationChange={result =>
             this.onUserLocationChange(result.nativeEvent.coordinate)
           }
-          //maps out markers with nested images. Markers can be assigned images by classification
           style={{ width: '100%', height: "100%" }}>
           {mapMarkers}
         </MapView>
