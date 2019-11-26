@@ -2,7 +2,7 @@
 
 Created using React Native, this Android/IOS app makes travel better by letting users create custom map markers via voice/text or a lean button-based UI, and then share them with other users, receiving updates via text to voice. Created with React Native, MongoDB, Node/Express, and community libraries this app represents the culmination of knowldge and skills gained at the SMU Coding Bootcamp. 
 
-<img src="./src/assets/images/readmepic.png" alt="drawing" width="200"/>
+<img src="./src/assets/images/readmepic.png" alt="roadrangerbasic" width="200"/>
 
 # Project Features
 1. [Overview](#Overview)
@@ -24,7 +24,13 @@ Once added, a marker will appear on the map for all other users of Road Ranger. 
 
 ## Demo-Gifs
 
+### To add a marker, simply tap the button that describes the road situation.
 
+<img src="./src/assets/images/button create marker.gif" alt="create-marker" width="200"/>
+
+### It's easy to add a custom marker too.
+
+<img src="./src/assets/images/add-custom-marker.gif" alt="create-custom-marker" width="200"/>
 
 ## Technology-Used
 
@@ -45,8 +51,8 @@ Once added, a marker will appear on the map for all other users of Road Ranger. 
 
 ## Challenges
 
-The first project to incorporate MongoDB as a backend, along with several express routes, this project proved one of the most time consuming, but also one of the most rewarding. Working on it helped build understanding of how the MongoDB database worked, how to organize several different routes, and how to incorporate scraped web data into an app. 
+From the outset, we intended for this project to be a challenge, and were not dissapointed. At first, getting android studio setup and running smoothly with React-Native was difficult. After mastering this, we tackled the difficulties in getting several react-native community made libraries to work together seamlessly, both with each together and with our logic. This eventually proved our greatest challenge, requiring us to understand in detail the inner workings of the libraries we had chosen to provide our functionality, and how they would interface with our code in a wide arrange of cases. Ultimately, this difficult project proved the most rewarding, necessitating long hours of research and debugging, but opening up new and exciting platforms for development.
 
 ## Final-Thoughts
 
-I completed this project, which would have worked very well paired with React, while on the edge of learning React. As a result, I began learning how to make MERN apps with an appreciation for how it streamlined some of the processes that were intensive to build in this app.
+This project presents several intriguing potential routes for expansion, including adding user profiles, and adding more selectivity choices for how users utilize Road Ranger: ie, if they would like to hear only certain kinds of alerts.
