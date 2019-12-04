@@ -35,6 +35,8 @@ import api from '../../utils/api';
 
 import Tts from 'react-native-tts';
 
+import MapIcon from "react-native-vector-icons/FontAwesome"
+
 // import Voice from 'react-native-voice';
 
 class Map extends React.Component {
@@ -95,6 +97,7 @@ class Map extends React.Component {
         console.log("didmount")
         for (let marker of results.data) {
           marker.mentioned = false;
+          this.matchToPhotos(marker)
         }
         this.setState({
           markers: results.data,
@@ -335,7 +338,10 @@ class Map extends React.Component {
               unit: 'mile',
             },
           ) ? newMarker.mentioned = true : newMarker.mentioned = false;
-//if a marker is within half a mile when drawn from the database, it enters as mentioned, as it will have been read off already, or just been created, and so should not be mentioned another time.
+          //if a marker is within half a mile when drawn from the database, it enters as mentioned, as it will have been read off already, or just been created, and so should not be mentioned another time.
+
+          this.matchToPhotos(newMarker)
+
         }
 
         this.setState({
@@ -344,6 +350,37 @@ class Map extends React.Component {
 
       })
       .catch(err => console.error(err))
+  }
+
+  matchToPhotos(aMarker) {
+    switch (aMarker.title) {
+      case "yakattack":
+        // aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+        break;
+      case "":
+        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+        break;
+      case "":
+        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+        break;
+      case "":
+        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+        break;
+      case "":
+        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+        break;
+      case "":
+        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+        break;
+      case "":
+        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+        break;
+      case "":
+        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+        break;
+      default:
+        aMarker.imageSrc = require("../assets/images/conifers-daylight-environment-1666021.jpg")
+    }
   }
 
 
@@ -361,12 +398,15 @@ class Map extends React.Component {
           description={marker.description}
           // onPress={() => this.readText("boogaloo")}
           key={marker._id}
-
+        // image={}
         >
+
+          <MapIcon name="circle" />
           {/* <Image
-            source={'./assets/pothole.jpg'}
-            style={{width: 50, height: 50}}
+            source={(marker.imageSrc)}
+            style={{ width: 50, height: 50 }}
           /> */}
+
         </Marker>
       ));
     }
