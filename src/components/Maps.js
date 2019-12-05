@@ -44,8 +44,8 @@ class Map extends React.Component {
     currentPosition: {
       latitude: 32.844297,
       longitude: -96.784919,
-      latitudeDelta: 1,
-      longitudeDelta: 1,
+      latitudeDelta: .1,
+      longitudeDelta: .1,
     },
     lastReferencePosition: {
       latitude: "",
@@ -68,7 +68,7 @@ class Map extends React.Component {
     speechPitch: 1,
     text: "hey apo how are you",
     buttonMarkerTest: "",
-    buttonTitles: ['Pothole', 'Accident', 'Speed Trap', 'Road Damage', 'Road Closed', 'Nice View', 'Clean Bathrooms', 'Freshly Paved Road', 'Add Custom Marker'],
+    buttonTitles: ['Pothole', 'Accident', 'Speed Trap', 'Road Damage', 'Road Closed', 'Nice View', 'Clean Bathrooms', 'Freshly Paved Road', 'Construction', 'Add Custom Marker'],
     buttonClicked: false,
     currentLatitude: "",
     currentLongitude: ""
@@ -144,8 +144,8 @@ class Map extends React.Component {
       currentPosition: {
         latitude: latitude,
         longitude: longitude,
-        latitudeDelta: .2,
-        longitudeDelta: .2,
+        latitudeDelta: .1,
+        longitudeDelta: .1,
       }
     })
 
@@ -172,7 +172,7 @@ class Map extends React.Component {
           { latitude, longitude },
           { latitude: marker.latitude, longitude: marker.longitude },
           {
-            threshold: .5,
+            threshold: .25,
             unit: 'mile',
           },
         )
@@ -194,12 +194,12 @@ class Map extends React.Component {
 
         // This particular haversine threshold didn't work, and had to be done manually
         console.log(this.state.lastReferencePosition)
-        let halfMilePassed = .5 < haversine({ latitude, longitude },
+        let quarterMilePassed = .25 < haversine({ latitude, longitude },
           { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
           {
             unit: 'mile',
           })
-        if (halfMilePassed) {
+        if (quarterMilePassed) {
           //If half a mile has passed between the users current position and the last, then set the current position to the last reference position, and get each map marker from the database
           this.setState({
             lastReferencePosition: {
@@ -334,7 +334,7 @@ class Map extends React.Component {
             { latitude: this.state.lastReferencePosition.latitude, longitude: this.state.lastReferencePosition.longitude },
             { latitude: newMarker.latitude, longitude: newMarker.longitude },
             {
-              threshold: .5,
+              threshold: .25,
               unit: 'mile',
             },
           ) ? newMarker.mentioned = true : newMarker.mentioned = false;
@@ -354,32 +354,35 @@ class Map extends React.Component {
 
   matchToPhotos(aMarker) {
     switch (aMarker.title) {
-      case "yakattack":
-        // aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+      case "Pothole":
+        aMarker.iconName = "circle"
         break;
-      case "":
-        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+      case "Accident":
+        aMarker.iconName = "exclamation-triangle"
         break;
-      case "":
-        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+      case "Speed Trap":
+        aMarker.iconName = "eye"
         break;
-      case "":
-        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+      case "Road Damage":
+        aMarker.iconName = "road"
         break;
-      case "":
-        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+      case "Road Closed":
+        aMarker.iconName = "ban"
         break;
-      case "":
-        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+      case "Nice View":
+        aMarker.iconName = "binoculars"
         break;
-      case "":
-        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+      case "Clean Bathrooms":
+        aMarker.iconName = "home"
         break;
-      case "":
-        aMarker.imageSrc = require("../assets/images/astronaut-astronomy-cosmos-2156.jpg")
+      case "Freshly Paved Road":
+        aMarker.iconName = "forward"
+        break;
+      case "Construction":
+        aMarker.iconName = "wrench"
         break;
       default:
-        aMarker.imageSrc = require("../assets/images/conifers-daylight-environment-1666021.jpg")
+        aMarker.iconName = "star"
     }
   }
 
@@ -401,7 +404,7 @@ class Map extends React.Component {
         // image={}
         >
 
-          <MapIcon name="circle" />
+          <MapIcon name={marker.iconName}  />
           {/* <Image
             source={(marker.imageSrc)}
             style={{ width: 50, height: 50 }}
