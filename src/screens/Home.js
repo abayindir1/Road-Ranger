@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Alert, TouchableOpacity, Modal, TouchableHighlight, Text, Button, StatusBar, Image } from "react-native";
+import { StyleSheet, View, Alert, TouchableOpacity, Modal, TouchableHighlight, Text, Button, StatusBar, Image,} from "react-native";
+import { AsyncStorage } from "@react-native-community/async-storage"
 import Voice from 'react-native-voice';
 
 import { PermissionsAndroid } from 'react-native';
@@ -16,21 +17,22 @@ import TalkButton from "../components/TalkButton";
 import api from '../../utils/api';
 import MapIcon from "react-native-vector-icons/FontAwesome"
 
+
 const HeaderWithImage = () => (
   <>
     <StatusBar barStyle="light-content" />
-    <View style={{height: 64, width: '100%'}}>
+    <View style={{ height: 64, width: '100%' }}>
       <Image
-        style={{height: 64, width: '100%'}}
+        style={{ height: 64, width: '100%' }}
         source={require('../assets/images/mapBackGround.png')}
       />
       <View
         style={[
-          {alignItems: 'center', justifyContent: 'center'},
+          { alignItems: 'center', justifyContent: 'center' },
           StyleSheet.absoluteFill,
         ]}>
         <Image
-          style={{position: 'absolute', width: 45, height: 45}}
+          style={{ position: 'absolute', width: 45, height: 45 }}
           source={require('../assets/images/13b8cbed-e1a4-4e8f-b96f-a47346ba2208_200x200.png')}
         />
       </View>
@@ -58,6 +60,12 @@ class Home extends Component {
     partialResults: [],
     hasSpeechRecorded: false,
     modalVisible: false,
+    userInfo: {
+      username: "Noobslay3r",
+      email: "nhaer123@gmail.com",
+      password: "password123456",
+    }
+
   };
 
   constructor(props) {
@@ -73,8 +81,45 @@ class Home extends Component {
     // ---------------------------------------------------------
   }
 
+  componentDidMount() {
+    console.log("gotem")
+    api.userLogin(this.state.userInfo)
+    .then(res => {
 
-//By tapping the central button, a modal will be displayed. This modal will display all the button options.
+      storeData = async () => {
+        try {
+          await AsyncStorage.setItem('key', res.data);
+        } catch (error) {
+          // Error saving data
+        }
+      };
+
+      retrieveData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('key');
+          if (value !== null) {
+            // We have data!!
+            console.log("dat value is" + value);
+          }
+        } catch (error) {
+          // Error retrieving data
+        }
+      };
+
+      storeData()
+      .then(retrieveData())
+
+
+    })
+    .catch(err => console.error(err))
+    // console.log("gotem")
+    // api.userSignup(this.state.userInfo)
+      // .then(res => console.log(res))
+      // .catch(err => console.error(err))
+  }
+
+
+  //By tapping the central button, a modal will be displayed. This modal will display all the button options.
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
@@ -101,7 +146,7 @@ class Home extends Component {
       console.warn(err);
     }
   }
-//logic for voice to text functionality
+  //logic for voice to text functionality
   componentWillUnmount() {
     Voice.destroy().then(Voice.removeAllListeners);
   }
@@ -182,13 +227,13 @@ class Home extends Component {
 
 
 
-//the main touchable opacity button will activte voice to text on a long press, and the quick-select buttons modal on a short press.
+  //the main touchable opacity button will activte voice to text on a long press, and the quick-select buttons modal on a short press.
   render() {
     return (
       <View style={styles.container}>
-        <Maps toggleModal = {() => this.setModalVisible(false)} isVisible={this.state.modalVisible} toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
+        <Maps toggleModal={() => this.setModalVisible(false)} isVisible={this.state.modalVisible} toggleHasSpeechRecorded={this.toggleHasSpeechRecorded} hasSpeechRecorded={this.state.hasSpeechRecorded} style={styles.mainMap} speechRecognitionResults={this.state.results} />
 
-        <TouchableOpacity style={styles.button} onPress={() => { this.setModalVisible(true)}} onLongPress={this._startRecognizing} >
+        <TouchableOpacity style={styles.button} onPress={() => { this.setModalVisible(true) }} onLongPress={this._startRecognizing} >
           <TalkButton style={styles.talkButton} />
         </TouchableOpacity>
 
@@ -201,14 +246,14 @@ class Home extends Component {
 }
 
 const styles = StyleSheet.create({
-  modal:{
+  modal: {
     backgroundColor: '#00000082',
     padding: 30,
     height: 800,
     alignContent: "center",
   },
-  markerButtons:{
-    color:'#bebcbc',
+  markerButtons: {
+    color: '#bebcbc',
     backgroundColor: "black",
     width: "70%",
     fontSize: 20,
@@ -218,8 +263,8 @@ const styles = StyleSheet.create({
     margin: 10,
     marginLeft: 50
   },
-  markerButtons2:{
-    color:'black',
+  markerButtons2: {
+    color: 'black',
     backgroundColor: "#bebcbc",
     width: "70%",
     fontSize: 20,
@@ -229,8 +274,8 @@ const styles = StyleSheet.create({
     margin: 10,
     marginLeft: 50
   },
-  hideModalButton:{
-    color:'black',
+  hideModalButton: {
+    color: 'black',
     backgroundColor: "turquoise",
     width: "70%",
     fontSize: 20,
@@ -385,8 +430,8 @@ const styles = StyleSheet.create({
     height: 812,
     marginLeft: -1
   },
-  icon4:{
-    color:"#fff"
+  icon4: {
+    color: "#fff"
   }
 });
 

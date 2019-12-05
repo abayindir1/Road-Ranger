@@ -24,9 +24,9 @@ class SignUp extends Component {
 
   componentDidMount () {
     console.log("gotem")
-    // api.userSignup(this.state)
-    // .then(res => console.log(res))
-    // .catch(err => console.error(err))
+    api.userSignup(this.state)
+    .then(res => console.log(res))
+    .catch(err => console.error(err))
 
 
   }
