@@ -70,15 +70,6 @@ class TextTest extends Component {
             console.log(`setDefaultLanguage error `, err);
           }
 
-
-          // for (let voice of voices) {
-          //   if(voice.name === "en-us-x-sfg-local"){
-
-          //     console.log("---------------",voice)
-          //     console.log(voices.indexOf(voice))
-          //   }
-          // }
-
           await Tts.setDefaultVoice(voices[103].id);
           this.setState({
             voices: availableVoices,
@@ -130,20 +121,6 @@ class TextTest extends Component {
         return (
           <View style={styles.container}>    
             <Button title={`Read text`} onPress={this.readText} />
-            {/* <Text style={styles.label}>{`Status: ${this.state.ttsStatus ||
-              ""}`}</Text>
-            <Text style={styles.label}>{`Selected Voice: ${this.state
-              .selectedVoice || ""}`}</Text> */}
-              
-{/*     
-            
-            <TextInput
-              style={styles.textInput}
-              multiline={true}
-              onChangeText={text => this.setState({ text })}
-              value={this.state.text}
-              onSubmitEditing={Keyboard.dismiss}
-            /> */}
     
            
           </View>
