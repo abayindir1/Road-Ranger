@@ -14,7 +14,6 @@ import {
 // import Voice from 'react-native-voice';
 
 import {PermissionsAndroid} from 'react-native';
-import Map from '../components/Map';
 import NavBar from '../components/NavBar';
 import LogoHeader from '../components/LogoHeader';
 import MaterialCommunityIconsIcon from 'react-native-vector-icons/MaterialCommunityIcons';
